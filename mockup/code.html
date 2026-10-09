@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lapang.id - Temukan &amp; Reservasi Lapangan Olahraga Se-Indonesia</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Leaflet CSS & JS -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet">
+<script crossorigin="" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              900: '#0e3813',
+              800: '#1B5E20', // Primary Green
+              700: '#2e7d32',
+              600: '#388e3c',
+              500: '#4CAF50', // Secondary Green
+              400: '#81c784',
+              300: '#A5D6A7', // Accent Soft Green
+              100: '#e8f5e9',
+              50: '#f1f8e9',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .custom-popup .leaflet-popup-content-wrapper {
+      padding: 0;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+    .custom-popup .leaflet-popup-content {
+      margin: 0;
+      line-height: 1.4;
+    }
+    .custom-pin {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .custom-pin:hover {
+      transform: scale(1.15) translateY(-4px);
+    }
+  </style>
+</link></head>
+<body class="bg-gray-50 text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
+<!-- TOP APP BAR -->
+<header class="bg-white border-b border-gray-200 z-30 shrink-0">
+<div class="px-4 lg:px-6 h-16 flex items-center justify-between gap-4">
+<!-- Brand Logo & National Badge -->
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-2 group" href="#">
+<div class="w-10 h-10 rounded-xl bg-brand-800 flex items-center justify-center text-white shadow-md shadow-brand-800/20 group-hover:scale-105 transition-transform">
+<i class="w-6 h-6" data-lucide="compass"></i>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xl font-extrabold tracking-tight text-slate-900">Lapang<span class="text-brand-800">.id</span></span>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-100 text-brand-800 uppercase tracking-wider">Nasional</span>
+</div>
+<p class="text-[11px] text-slate-500 font-medium hidden sm:block">Peta &amp; Booking Lapangan Olahraga Seluruh Indonesia</p>
+</div>
+</a>
+</div>
+<!-- Quick Search Bar (Provinsi, Kota, Olahraga) -->
+<div class="hidden md:flex items-center flex-1 max-w-xl mx-2 bg-gray-100/80 hover:bg-gray-100 transition rounded-full p-1.5 border border-gray-200 focus-within:border-brand-800 focus-within:ring-2 focus-within:ring-brand-300">
+<div class="flex items-center pl-3 pr-2 text-slate-400">
+<i class="w-4 h-4 text-brand-800" data-lucide="search"></i>
+</div>
+<input class="w-full bg-transparent text-xs lg:text-sm text-slate-800 placeholder-slate-400 focus:outline-none" id="globalSearchInput" oninput="handleQuickSearch(this.value)" placeholder="Cari lapangan, nama GOR, kota (Jakarta, Surabaya, Bandung...)" type="text"/>
+<button class="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 bg-white text-brand-800 rounded-full shadow-sm hover:bg-brand-50 transition border border-gray-200 whitespace-nowrap" onclick="handleGeolocation()">
+<i class="w-3.5 h-3.5 text-brand-800" data-lucide="crosshair"></i>
+<span>Dekat Saya</span>
+</button>
+</div>
+<!-- User Nav Actions -->
+<div class="flex items-center gap-2 lg:gap-3">
+<button class="hidden lg:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-brand-800 px-3 py-2 rounded-lg hover:bg-brand-50 transition">
+<i class="w-4 h-4 text-brand-600" data-lucide="shield-check"></i>
+<span>Daftarkan Venue</span>
+</button>
+<a class="p-2 text-slate-600 hover:text-brand-800 hover:bg-gray-100 rounded-full transition relative" href="#bookingHistory" onclick="alert('Membuka riwayat booking terverifikasi Anda')">
+<i class="w-5 h-5" data-lucide="calendar"></i>
+<span class="absolute top-1 right-1 w-2 h-2 bg-brand-500 rounded-full"></span>
+</a>
+<div class="h-6 w-px bg-gray-200 mx-1"></div>
+<div class="flex items-center gap-2 pl-1 cursor-pointer" onclick="toggleUserModal()">
+<img alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-brand-300" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div class="hidden xl:block text-left text-xs leading-tight">
+<p class="font-bold text-slate-800">Rian Pratama</p>
+<p class="text-[10px] text-brand-700 font-semibold">Verified Player 🏅</p>
+</div>
+</div>
+</div>
+</div>
+<!-- FILTER & CATEGORY CHIPS BAR -->
+<div class="bg-white border-t border-gray-100 px-4 lg:px-6 py-2.5 flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
+<!-- Sport Category Buttons -->
+<div class="flex items-center gap-2 shrink-0" id="sportFilters">
+<button class="sport-btn active px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition bg-brand-800 text-white shadow-sm" data-sport="all" onclick="filterBySport('all')">
+<i class="w-3.5 h-3.5" data-lucide="layout-grid"></i>
+<span>Semua Cabang</span>
+</button>
+<button class="sport-btn px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800" data-sport="futsal" onclick="filterBySport('futsal')">
+<span>⚽</span>
+<span>Futsal &amp; Mini Soccer</span>
+</button>
+<button class="sport-btn px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800" data-sport="badminton" onclick="filterBySport('badminton')">
+<span>🏸</span>
+<span>Badminton</span>
+</button>
+<button class="sport-btn px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800" data-sport="basketball" onclick="filterBySport('basketball')">
+<span>🏀</span>
+<span>Basket (Full/3x3)</span>
+</button>
+<button class="sport-btn px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800" data-sport="padel" onclick="filterBySport('padel')">
+<span>🎾</span>
+<span>Tenis &amp; Padel</span>
+</button>
+<button class="sport-btn px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800" data-sport="volleyball" onclick="filterBySport('volleyball')">
+<span>🏐</span>
+<span>Bola Voli</span>
+</button>
+</div>
+<!-- Advanced Filter Trigger & Counters -->
+<div class="flex items-center gap-2 shrink-0 pl-2 border-l border-gray-200">
+<!-- City Selector -->
+<div class="relative inline-block text-left">
+<select class="text-xs font-bold text-slate-700 bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 pr-7 focus:outline-none focus:border-brand-800 appearance-none cursor-pointer hover:bg-gray-200 transition" id="citySelect" onchange="handleCityFilter(this.value)">
+<option value="all">📍 Seluruh Indonesia (38 Provinsi)</option>
+<option selected="" value="Jakarta">Jakarta &amp; Sekitarnya (Jabodetabek)</option>
+<option value="Bandung">Bandung Raya (Jawa Barat)</option>
+<option value="Surabaya">Surabaya &amp; Sidoarjo (Jawa Timur)</option>
+<option value="Bali">Denpasar &amp; Badung (Bali)</option>
+<option value="Medan">Medan (Sumatera Utara)</option>
+<option value="Makassar">Makassar (Sulawesi Selatan)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+<i class="w-3.5 h-3.5" data-lucide="chevron-down"></i>
+</div>
+</div>
+<!-- Filter Modal Trigger -->
+<button class="flex items-center gap-1 text-xs font-bold text-slate-700 bg-white border border-gray-200 hover:border-brand-800 px-3 py-1.5 rounded-lg transition hover:bg-brand-50" onclick="toggleFilterDrawer()">
+<i class="w-3.5 h-3.5 text-brand-800" data-lucide="sliders-horizontal"></i>
+<span>Filter Spesifikasi</span>
+<span class="w-2 h-2 rounded-full bg-brand-500"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN SPLIT VIEW (MAP & LIST) -->
+<main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+<!-- LEFT SIDE: VENUE CATALOG LIST VIEW (45% Width on Desktop) -->
+<section class="w-full md:w-[48%] lg:w-[42%] xl:w-[38%] h-full flex flex-col bg-white border-r border-gray-200 z-10">
+<!-- List Header with Stats & Sort -->
+<div class="p-4 border-b border-gray-100 bg-white flex items-center justify-between shrink-0">
+<div>
+<h1 class="text-sm md:text-base font-extrabold text-slate-900 flex items-center gap-2">
+<span>Lapangan Tersedia</span>
+<span class="bg-brand-100 text-brand-800 text-xs px-2 py-0.5 rounded-full font-bold" id="venueCountBadge">6 Venue</span>
+</h1>
+<p class="text-xs text-slate-500" id="locationSubtext">Menampilkan hasil di <span class="font-semibold text-slate-700">DKI Jakarta &amp; sekitarnya</span></p>
+</div>
+<!-- Sorting -->
+<div class="flex items-center gap-1.5 text-xs text-slate-500">
+<span>Urutkan:</span>
+<select class="font-bold text-slate-800 bg-transparent focus:outline-none cursor-pointer" id="sortSelect" onchange="handleSort(this.value)">
+<option value="recommended">Rekomendasi</option>
+<option value="price_low">Harga Terendah</option>
+<option value="rating_high">Rating Tertinggi</option>
+<option value="distance">Jarak Terdekat</option>
+</select>
+</div>
+</div>
+<!-- Quick Radius Bar -->
+<div class="px-4 py-2 bg-brand-50/70 border-b border-brand-100 flex items-center justify-between text-xs">
+<div class="flex items-center gap-1.5 text-brand-900 font-semibold">
+<i class="w-3.5 h-3.5 text-brand-800" data-lucide="navigation"></i>
+<span>Radius Jangkauan:</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="radius-btn px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-gray-200 hover:bg-brand-100" onclick="setRadius(5)">5 km</button>
+<button class="radius-btn active px-2 py-0.5 rounded text-[11px] font-bold bg-brand-800 text-white shadow-xs" onclick="setRadius(10)">10 km</button>
+<button class="radius-btn px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-gray-200 hover:bg-brand-100" onclick="setRadius(25)">25 km</button>
+<button class="radius-btn px-2 py-0.5 rounded text-[11px] font-bold bg-white text-slate-700 border border-gray-200 hover:bg-brand-100" onclick="setRadius('all')">Semua</button>
+</div>
+</div>
+<!-- VENUE CARDS SCROLLABLE FEED -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-slate-50/60" id="venueCardsContainer">
+<!-- Cards dynamically populated via JS -->
+</div>
+</section>
+<!-- RIGHT SIDE: INTERACTIVE MAP (55% Width on Desktop) -->
+<section class="flex-1 h-full relative bg-slate-200 overflow-hidden">
+<!-- Leaflet Map Container -->
+<div class="w-full h-full z-0" id="leafletMap"></div>
+<!-- Floating Map Controls / Overlay Badges -->
+<div class="absolute top-4 left-4 z-[500] flex flex-col gap-2">
+<div class="bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-lg border border-gray-200/80 flex items-center gap-3">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-brand-800 animate-ping"></span>
+<span class="text-xs font-bold text-slate-800">GPS Live Sync</span>
+</div>
+<span class="text-gray-300">|</span>
+<span class="text-xs text-slate-500">Geser peta untuk perbarui list</span>
+</div>
+</div>
+<!-- Map Layer Legend (Jenis Lapangan) -->
+<div class="absolute bottom-6 left-4 z-[500] bg-white/95 backdrop-blur-md p-3 rounded-xl shadow-lg border border-gray-200 text-xs hidden sm:block">
+<p class="font-bold text-slate-800 mb-1.5">Keterangan Pin Peta:</p>
+<div class="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-600">
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Futsal/Sepak Bola</div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Badminton</div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-600"></span> Bola Basket</div>
+<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Tenis &amp; Padel</div>
+</div>
+</div>
+<!-- Recenter to Indonesia Button -->
+<button class="absolute bottom-6 right-4 z-[500] bg-white text-slate-800 p-2.5 rounded-xl shadow-lg border border-gray-200 hover:bg-brand-50 hover:text-brand-800 transition flex items-center gap-1.5 text-xs font-bold" onclick="resetMapToIndonesia()" title="Reset Tampilan Seluruh Indonesia">
+<i class="w-4 h-4 text-brand-800" data-lucide="maximize"></i>
+<span class="hidden md:inline">Lihat Peta Indonesia</span>
+</button>
+</section>
+</main>
+<!-- VENUE DETAIL DRAWER / MODAL (POPUP SAAT KLIK KARTU / MARKER) -->
+<div class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex justify-end transition-opacity duration-300 opacity-0 pointer-events-none" id="venueDetailModal">
+<div class="w-full max-w-2xl bg-white h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out overflow-hidden" id="drawerPanel">
+<!-- Drawer Header -->
+<div class="p-4 border-b border-gray-200 flex items-center justify-between bg-white shrink-0">
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-gray-100 rounded-full text-slate-500 transition" onclick="closeVenueDetail()">
+<i class="w-5 h-5" data-lucide="arrow-left"></i>
+</button>
+<div>
+<h2 class="text-base font-extrabold text-slate-900" id="modalVenueName">Nama Venue</h2>
+<p class="text-xs text-slate-500" id="modalVenueCity">Kota &amp; Provinsi</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-600 hover:bg-gray-100 rounded-full" onclick="shareVenue()">
+<i class="w-4 h-4" data-lucide="share-2"></i>
+</button>
+<button class="p-2 text-slate-600 hover:bg-gray-100 rounded-full" onclick="bookmarkVenue()">
+<i class="w-4 h-4 text-rose-500" data-lucide="heart"></i>
+</button>
+<button class="p-2 text-slate-400 hover:text-slate-800 hover:bg-gray-100 rounded-full" onclick="closeVenueDetail()">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+</div>
+</div>
+<!-- Drawer Scrollable Body -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6">
+<!-- 1. Galeri Foto Multi-Bucket (Simulasi MinIO) -->
+<div>
+<div class="grid grid-cols-3 gap-2 rounded-2xl overflow-hidden h-60">
+<div class="col-span-2 relative group overflow-hidden cursor-pointer">
+<img alt="Foto Utama" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" id="modalMainImg" src=""/>
+<span class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1">
+<i class="w-3.5 h-3.5 text-brand-400" data-lucide="badge-check"></i>
+                Verified MinIO S3 Storage
+              </span>
+</div>
+<div class="flex flex-col gap-2">
+<div class="h-1/2 overflow-hidden rounded-r-lg group cursor-pointer">
+<img alt="Detail 1" class="w-full h-full object-cover group-hover:scale-105 transition" id="modalSubImg1" src=""/>
+</div>
+<div class="h-1/2 relative overflow-hidden rounded-r-lg group cursor-pointer">
+<img alt="Detail 2" class="w-full h-full object-cover group-hover:scale-105 transition" id="modalSubImg2" src=""/>
+<div class="absolute inset-0 bg-slate-900/50 flex items-center justify-center text-white text-xs font-bold">
+                  +4 Foto Lain
+                </div>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. Badges Ringkasan & Rating Multi-Dimensi -->
+<div class="flex flex-wrap items-center justify-between gap-3 p-4 bg-brand-50/60 rounded-2xl border border-brand-100">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-2xl font-black text-brand-900" id="modalRatingAvg">4.9</span>
+<div>
+<div class="flex text-amber-500 text-xs">★★★★★</div>
+<p class="text-[11px] text-slate-600 font-semibold" id="modalReviewCount">128 ulasan terverifikasi</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 text-xs">
+<span class="px-2.5 py-1 bg-white rounded-lg font-bold text-brand-800 shadow-xs border border-brand-200">
+              ⚡ Konfirmasi Instan
+            </span>
+<span class="px-2.5 py-1 bg-white rounded-lg font-bold text-slate-700 shadow-xs border border-gray-200">
+              🛡️ Bebas Reschedule
+            </span>
+</div>
+</div>
+<!-- 3. Deskripsi & Detail Operasional -->
+<div>
+<h3 class="text-sm font-bold text-slate-900 mb-1.5 flex items-center gap-1.5">
+<i class="w-4 h-4 text-brand-800" data-lucide="info"></i>
+<span>Tentang Venue &amp; Lapangan</span>
+</h3>
+<p class="text-xs text-slate-600 leading-relaxed" id="modalDescription">
+            Deskripsi venue akan tampil di sini.
+          </p>
+<div class="mt-3 grid grid-cols-2 gap-3 text-xs bg-gray-50 p-3 rounded-xl border border-gray-200">
+<div>
+<span class="text-slate-400 block text-[11px]">Jam Operasional</span>
+<span class="font-bold text-slate-800" id="modalHours">07:00 - 24:00 WIB</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[11px]">Jenis Lantai</span>
+<span class="font-bold text-slate-800" id="modalFloorType">Vinyl Standar BWF / Rumput Sintetis FIFA</span>
+</div>
+</div>
+</div>
+<!-- 4. Daftar Fasilitas Lengkap (Amenities) -->
+<div>
+<h3 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-1.5">
+<i class="w-4 h-4 text-brand-800" data-lucide="check-circle"></i>
+<span>Fasilitas Penunjang</span>
+</h3>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs" id="modalAmenitiesList">
+<!-- Amenities inserted by JS -->
+</div>
+</div>
+<!-- 5. Interactive Time Slot Selector (Real-Time Availability) -->
+<div class="border-t border-gray-200 pt-5">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+<i class="w-4 h-4 text-brand-800" data-lucide="clock"></i>
+<span>Pilih Slot Waktu Main</span>
+</h3>
+<p class="text-[11px] text-slate-500">Pilih tanggal dan klik jam untuk booking</p>
+</div>
+<!-- Date Toggle -->
+<div class="flex bg-gray-100 p-1 rounded-lg text-xs font-semibold">
+<button class="px-2.5 py-1 rounded-md bg-white text-brand-800 shadow-xs" id="tabToday" onclick="changeDateTab('today')">Hari Ini</button>
+<button class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900" id="tabTomorrow" onclick="changeDateTab('tomorrow')">Besok</button>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex items-center gap-4 text-[11px] mb-3 text-slate-600">
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-brand-300"></span> Tersedia</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-brand-800"></span> Dipilih</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-gray-200"></span> Penuh / Terisi</div>
+</div>
+<!-- Grid Jam -->
+<div class="grid grid-cols-3 sm:grid-cols-4 gap-2 text-xs" id="slotGrid">
+<!-- Slot buttons generated by JS -->
+</div>
+</div>
+<!-- 6. Review & Rating Terverifikasi (Verified Booker Reviews) -->
+<div class="border-t border-gray-200 pt-5">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+<i class="w-4 h-4 text-brand-800" data-lucide="message-square"></i>
+<span>Ulasan Pemain Terverifikasi</span>
+</h3>
+<button class="text-xs font-bold text-brand-800 hover:underline" onclick="openReviewModal()">
+              + Tulis Ulasan
+            </button>
+</div>
+<!-- Multi-Criteria Aspect Rating Breakdown -->
+<div class="grid grid-cols-2 gap-2 text-xs bg-gray-50 p-3 rounded-xl border border-gray-100 mb-4">
+<div>
+<div class="flex justify-between text-[11px] text-slate-500">
+<span>Kualitas Lantai</span>
+<span class="font-bold text-slate-800">4.9 / 5</span>
+</div>
+<div class="w-full bg-gray-200 h-1.5 rounded-full mt-1">
+<div class="bg-brand-500 h-1.5 rounded-full" style="width: 98%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] text-slate-500">
+<span>Penerangan Lampu</span>
+<span class="font-bold text-slate-800">4.8 / 5</span>
+</div>
+<div class="w-full bg-gray-200 h-1.5 rounded-full mt-1">
+<div class="bg-brand-500 h-1.5 rounded-full" style="width: 96%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] text-slate-500">
+<span>Kebersihan &amp; Toilet</span>
+<span class="font-bold text-slate-800">4.7 / 5</span>
+</div>
+<div class="w-full bg-gray-200 h-1.5 rounded-full mt-1">
+<div class="bg-brand-500 h-1.5 rounded-full" style="width: 94%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] text-slate-500">
+<span>Pelayanan Staf</span>
+<span class="font-bold text-slate-800">4.9 / 5</span>
+</div>
+<div class="w-full bg-gray-200 h-1.5 rounded-full mt-1">
+<div class="bg-brand-500 h-1.5 rounded-full" style="width: 98%"></div>
+</div>
+</div>
+</div>
+<!-- Sample Reviews -->
+<div class="space-y-3" id="reviewsContainer">
+<!-- Rendered by JS -->
+</div>
+</div>
+</div>
+<!-- Drawer Sticky Footer (Action & Price) -->
+<div class="p-4 bg-white border-t border-gray-200 flex items-center justify-between shrink-0 shadow-lg">
+<div>
+<span class="text-[11px] text-slate-400 block font-medium">Total Biaya Sewa</span>
+<div class="flex items-baseline gap-1">
+<span class="text-lg font-black text-brand-800" id="modalPriceSummary">Rp 150.000</span>
+<span class="text-xs text-slate-500 font-semibold" id="slotSelectedLabel">/ 1 jam</span>
+</div>
+</div>
+<button class="px-6 py-3 bg-brand-800 hover:bg-brand-900 active:scale-95 text-white font-bold rounded-xl text-sm shadow-md shadow-brand-800/20 transition flex items-center gap-2" onclick="handleCheckout()">
+<span>Pesan Sekarang (QRIS/VA)</span>
+<i class="w-4 h-4" data-lucide="arrow-right"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- FILTER SPECIFICATION MODAL (FLOATING) -->
+<div class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="filterModal">
+<div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+<div class="flex items-center justify-between border-b pb-3">
+<h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+<i class="w-5 h-5 text-brand-800" data-lucide="filter"></i>
+<span>Filter Spesifikasi Lapangan</span>
+</h3>
+<button class="text-slate-400 hover:text-slate-700" onclick="toggleFilterDrawer()">
+<i class="w-5 h-5" data-lucide="x"></i>
+</button>
+</div>
+<!-- Tipe Lapangan -->
+<div>
+<label class="text-xs font-bold text-slate-700 block mb-2">Tipe Ruangan</label>
+<div class="grid grid-cols-3 gap-2 text-xs">
+<label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input checked="" class="text-brand-800 rounded" type="checkbox"/>
+<span>Indoor (AC)</span>
+</label>
+<label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input checked="" class="text-brand-800 rounded" type="checkbox"/>
+<span>Outdoor</span>
+</label>
+<label class="flex items-center gap-2 p-2.5 rounded-xl border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input checked="" class="text-brand-800 rounded" type="checkbox"/>
+<span>Semi-Indoor</span>
+</label>
+</div>
+</div>
+<!-- Jenis Permukaan / Lantai -->
+<div>
+<label class="text-xs font-bold text-slate-700 block mb-2">Jenis Permukaan Lantai</label>
+<div class="grid grid-cols-2 gap-2 text-xs">
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Rumput Sintetis (FIFA)</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Vinyl Matras (BWF)</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Interlocking Flooring</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Parquet / Kayu Parket</span>
+</label>
+</div>
+</div>
+<!-- Fasilitas Penting -->
+<div>
+<label class="text-xs font-bold text-slate-700 block mb-2">Fasilitas Wajib</label>
+<div class="grid grid-cols-2 gap-2 text-xs">
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input checked="" class="text-brand-800 rounded" type="checkbox"/>
+<span>Shower Air Hangat</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input checked="" class="text-brand-800 rounded" type="checkbox"/>
+<span>Musholla Bersih</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Parkir Mobil Luas</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
+<input class="text-brand-800 rounded" type="checkbox"/>
+<span>Kantin &amp; Cafe</span>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2 border-t">
+<button class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-gray-100 rounded-lg" onclick="toggleFilterDrawer()">Batal</button>
+<button class="px-5 py-2 text-xs font-bold bg-brand-800 text-white rounded-lg hover:bg-brand-900 shadow" onclick="applyFilters()">Terapkan Filter</button>
+</div>
+</div>
+</div>
+<!-- CHECKOUT SUCCESS MODAL (SIMULASI MIDTRANS QRIS) -->
+<div class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="checkoutModal">
+<div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center space-y-4">
+<div class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-800 flex items-center justify-center mx-auto shadow-inner">
+<i class="w-8 h-8 text-brand-800" data-lucide="check-check"></i>
+</div>
+<div>
+<h3 class="text-lg font-black text-slate-900">Reservasi Lapangan Berhasil!</h3>
+<p class="text-xs text-slate-500 mt-1">Kode Booking: <span class="font-mono font-bold text-brand-800">LAPANG-2024-ID-8849</span></p>
+</div>
+<div class="bg-slate-50 p-4 rounded-2xl border border-gray-200 text-left text-xs space-y-2">
+<div class="flex justify-between">
+<span class="text-slate-500">Venue:</span>
+<span class="font-bold text-slate-800" id="coVenue">The Emerald Arena</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-500">Jadwal:</span>
+<span class="font-bold text-brand-800" id="coTime">Hari ini, 19:00 - 20:00 WIB</span>
+</div>
+<div class="flex justify-between">
+<span class="text-slate-500">Metode Bayar:</span>
+<span class="font-bold text-slate-800 flex items-center gap-1">
+<span class="px-1.5 py-0.5 bg-red-100 text-red-600 rounded font-black text-[10px]">QRIS</span>
+<span>Instan Pay</span>
+</span>
+</div>
+<div class="border-t pt-2 flex justify-between font-black text-sm text-slate-900">
+<span>Total Tagihan:</span>
+<span class="text-brand-800" id="coPrice">Rp 150.000</span>
+</div>
+</div>
+<!-- Dummy QR Code -->
+<div class="p-3 bg-white border border-gray-200 rounded-xl inline-block">
+<img alt="QRIS" class="w-32 h-32 mx-auto" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<p class="text-[10px] text-slate-400 mt-1">Scan via GoPay, OVO, BCA, Livin Mandiri</p>
+</div>
+<div class="flex gap-2">
+<button class="w-full py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl text-xs transition" onclick="closeCheckoutModal()">
+          Selesai &amp; Buka E-Tiket
+        </button>
+</div>
+</div>
+</div>
+<!-- JAVASCRIPT APPLICATION LOGIC -->
+<script>
+    // --- DATABASE MOCKUP BERDASARKAN DOKUMEN SPESIFIKASI ---
+    const venuesData = [
+      {
+        id: "v-1",
+        name: "The Emerald Arena Jakarta",
+        sport: "futsal",
+        sportName: "Futsal & Mini Soccer",
+        sportIcon: "⚽",
+        city: "Jakarta",
+        province: "DKI Jakarta",
+        address: "Jl. TB Simatupang No. 18, Cilandak, Jakarta Selatan",
+        lat: -6.2941,
+        lng: 106.8044,
+        distance: "1.8 km",
+        priceHourly: 175000,
+        priceFormatted: "Rp 175.000",
+        rating: 4.9,
+        reviewsCount: 142,
+        floorType: "Rumput Sintetis Monofilament FIFA Standard",
+        courtType: "Semi-Indoor",
+        hours: "06:00 - 24:00 WIB",
+        description: "Venue mini soccer dan futsal premium dengan rumput sintetis standar internasional. Dilengkapi lampu floodlight 500 lux untuk pertandingan malam hari, ruang ganti ber-AC, dan shower air panas.",
+        mainImage: "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=500&q=80",
+          "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=500&q=80"
+        ],
+        amenities: ["Parkir Luas Mobil/Motor", "Shower Air Hangat", "Kantin & Coffee Shop", "Musholla AC", "Loker & Ruang Ganti", "Sewa Rompi & Bola"],
+        slots: ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "19:00", "20:00", "21:00"],
+        bookedSlots: ["08:00", "15:00", "19:00"]
+      },
+      {
+        id: "v-2",
+        name: "GOR Badminton Bintang Dago",
+        sport: "badminton",
+        sportName: "Badminton",
+        sportIcon: "🏸",
+        city: "Bandung",
+        province: "Jawa Barat",
+        address: "Jl. Ir. H. Juanda No. 84, Dago, Kota Bandung",
+        lat: -6.8850,
+        lng: 107.6136,
+        distance: "2.4 km",
+        priceHourly: 85000,
+        priceFormatted: "Rp 85.000",
+        rating: 4.8,
+        reviewsCount: 96,
+        floorType: "Karpet Vinyl BWF Approved 5mm",
+        courtType: "Indoor Hall",
+        hours: "07:00 - 23:00 WIB",
+        description: "Pusat bulu tangkis terlengkap di Bandung dengan 6 lapangan karpet vinyl standar kejuaraan BWF. Sirkulasi udara sejuk pegunungan tanpa hembusan angin yang mengganggu jalannya shuttlecock.",
+        mainImage: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1613918108466-292b78a8ef95?auto=format&fit=crop&w=500&q=80",
+          "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&w=500&q=80"
+        ],
+        amenities: ["Karpet Vinyl BWF", "Parkir Mobil", "Musholla", "Kantin Minuman", "Penyewaan Raket", "Shower Air Bersih"],
+        slots: ["07:00", "08:00", "10:00", "11:00", "16:00", "17:00", "19:00", "20:00"],
+        bookedSlots: ["10:00", "19:00"]
+      },
+      {
+        id: "v-3",
+        name: "Sanur Padel & Tennis Club",
+        sport: "padel",
+        sportName: "Tenis & Padel",
+        sportIcon: "🎾",
+        city: "Bali",
+        province: "Bali",
+        address: "Jl. Danau Tamblingan No. 102, Sanur, Denpasar Selatan",
+        lat: -8.6981,
+        lng: 115.2625,
+        distance: "3.1 km",
+        priceHourly: 220000,
+        priceFormatted: "Rp 220.000",
+        rating: 4.95,
+        reviewsCount: 210,
+        floorType: "Panoramic Glass & Textured Silica Turf",
+        courtType: "Outdoor Coastal Court",
+        hours: "06:00 - 22:00 WITA",
+        description: "Fasilitas Padel Tennis standar turnamen di pinggir pantai Sanur. Nikmati match seru dengan angin pantai sejuk, kafe hidangan sehat organik, dan pro shop peralatan tenis terkini.",
+        mainImage: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=500&q=80",
+          "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80"
+        ],
+        amenities: ["Panoramic Glass Court", "Lounge & Juice Bar", "Shower Air Hangat", "Instruktur Profesional", "Parkir Luas", "Free Wi-Fi"],
+        slots: ["07:00", "08:30", "10:00", "15:00", "16:30", "18:00", "19:30"],
+        bookedSlots: ["08:30", "18:00"]
+      },
+      {
+        id: "v-4",
+        name: "Surabaya Pro Basketball Center",
+        sport: "basketball",
+        sportName: "Bola Basket",
+        sportIcon: "🏀",
+        city: "Surabaya",
+        province: "Jawa Timur",
+        address: "Jl. Mayjen Sungkono No. 55, Sawahan, Surabaya",
+        lat: -7.2917,
+        lng: 112.7239,
+        distance: "4.2 km",
+        priceHourly: 190000,
+        priceFormatted: "Rp 190.000",
+        rating: 4.75,
+        reviewsCount: 88,
+        floorType: "FIBA Certified Maple Hardwood Floor",
+        courtType: "Indoor Stadium",
+        hours: "08:00 - 23:00 WIB",
+        description: "Lapangan basket kayu maple bersertifikasi FIBA dengan ring pegas hidrolik profesional. Cocok untuk sparring turnamen resmi maupun latihan rutin komunitas basket Jawa Timur.",
+        mainImage: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?auto=format&fit=crop&w=500&q=80"
+        ],
+        amenities: ["FIBA Wooden Court", "Tribun 200 Penonton", "Scoreboard Digital LED", "Kamar Ganti + Loker", "Parkir Mobil"],
+        slots: ["08:00", "10:00", "13:00", "15:00", "17:00", "19:00", "21:00"],
+        bookedSlots: ["17:00", "19:00"]
+      },
+      {
+        id: "v-5",
+        name: "Grand Futsal Interlock Kuningan",
+        sport: "futsal",
+        sportName: "Futsal",
+        sportIcon: "⚽",
+        city: "Jakarta",
+        province: "DKI Jakarta",
+        address: "Jl. Rasuna Said Kav. 8, Setiabudi, Jakarta Selatan",
+        lat: -6.2215,
+        lng: 106.8315,
+        distance: "3.5 km",
+        priceHourly: 160000,
+        priceFormatted: "Rp 160.000",
+        rating: 4.85,
+        reviewsCount: 164,
+        floorType: "Interlocking Polypropylene Floor",
+        courtType: "Indoor Air Conditioned",
+        hours: "07:00 - 24:00 WIB",
+        description: "Lokasi strategis di pusat perkantoran Kuningan. Lapangan interlock berkualitas empuk meredam benturan lutut, penerangan LED daylight merata, dan kafetaria lengkap.",
+        mainImage: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=500&q=80"
+        ],
+        amenities: ["Lantai Interlock Safe", "Shower Hangat", "Musholla", "Kantin & Minuman Dingin", "Sewa Rompi & Bola"],
+        slots: ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
+        bookedSlots: ["18:00", "20:00"]
+      },
+      {
+        id: "v-6",
+        name: "Voli Pantai & Taraflex Indoor Medan",
+        sport: "volleyball",
+        sportName: "Bola Voli",
+        sportIcon: "🏐",
+        city: "Medan",
+        province: "Sumatera Utara",
+        address: "Jl. Ringroad No. 12, Medan Sunggal, Kota Medan",
+        lat: 3.5852,
+        lng: 98.6256,
+        distance: "5.8 km",
+        priceHourly: 120000,
+        priceFormatted: "Rp 120.000",
+        rating: 4.7,
+        reviewsCount: 52,
+        floorType: "Gerflor Taraflex Sport M Plus 7mm",
+        courtType: "Indoor Hall",
+        hours: "08:00 - 22:00 WIB",
+        description: "Satu-satunya gelanggang voli indoor di Sumatera Utara dengan karpet Taraflex empuk berstandar FIVB. Mencegah cedera engkel dan lutut bagi atlet dan pecinta bola voli.",
+        mainImage: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=800&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=800&q=80"
+        ],
+        amenities: ["Lantai Taraflex FIVB", "Ruang Ganti Nyaman", "Parkir Mobil/Motor", "Musholla", "First Aid Kit"],
+        slots: ["08:00", "10:00", "14:00", "16:00", "18:00", "20:00"],
+        bookedSlots: ["16:00"]
+      }
+    ];
+
+    // Reviews Mockup
+    const sampleReviews = [
+      {
+        user: "Bagus Hendrawan",
+        role: "Verified Booker",
+        rating: 5,
+        date: "2 hari yang lalu",
+        comment: "Rumput sintetis empuk banget dan gak bikin lecet saat tackling. Lampu malamnya terang merata tanpa silau. Staf lapangan ramah sekali!",
+        ownerReply: "Terima kasih Mas Bagus! Senang tim Anda puas bermain di lapangan kami. Sampai jumpa di jadwal sparring berikutnya!"
+      },
+      {
+        user: "Indra Kusuma",
+        role: "Verified Booker",
+        rating: 4.8,
+        date: "1 minggu yang lalu",
+        comment: "Kamar mandi bersih dengan shower air hangat mantap setelah keringat deras. Parkir mobil luas dan aman. Sangat direkomendasikan untuk komunitas.",
+        ownerReply: null
+      }
+    ];
+
+    // State Variables
+    let currentSportFilter = 'all';
+    let currentCityFilter = 'Jakarta';
+    let currentRadius = 10;
+    let selectedSlot = null;
+    let currentActiveVenue = null;
+    let map = null;
+    let markersLayer = null;
+
+    // --- INISIALISASI LEAFLET MAP ---
+    function initMap() {
+      // Default center: Indonesia / Jakarta coordinates
+      map = L.map('leafletMap', {
+        zoomControl: true,
+        attributionControl: false
+      }).setView([-6.2088, 106.8456], 12);
+
+      // OpenStreetMap Tiles dengan styling bersih
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+      }).addTo(map);
+
+      markersLayer = L.layerGroup().addTo(map);
+      renderMapMarkers();
+    }
+
+    // Custom Sport Marker Icon Generator
+    function createSportMarkerIcon(venue) {
+      let pinColor = '#1B5E20'; // Brand green
+      if (venue.sport === 'badminton') pinColor = '#f59e0b';
+      if (venue.sport === 'basketball') pinColor = '#ea580c';
+      if (venue.sport === 'padel') pinColor = '#2563eb';
+      if (venue.sport === 'volleyball') pinColor = '#059669';
+
+      const html = `
+        <div class="custom-pin relative flex flex-col items-center cursor-pointer">
+          <div style="background-color: ${pinColor};" class="w-10 h-10 rounded-2xl shadow-xl flex items-center justify-center text-white border-2 border-white ring-2 ring-black/10">
+            <span class="text-base">${venue.sportIcon}</span>
+          </div>
+          <div style="border-top-color: ${pinColor};" class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px]"></div>
+          <div class="bg-slate-900/90 text-white font-extrabold text-[10px] px-2 py-0.5 rounded-full shadow-md mt-0.5 whitespace-nowrap">
+            ${venue.priceFormatted}
+          </div>
+        </div>
+      `;
+
+      return L.divIcon({
+        className: 'leaflet-custom-marker',
+        html: html,
+        iconSize: [44, 58],
+        iconAnchor: [22, 54],
+        popupAnchor: [0, -50]
+      });
+    }
+
+    // Render Markers on Map
+    function renderMapMarkers() {
+      if (!markersLayer) return;
+      markersLayer.clearLayers();
+
+      const filtered = getFilteredVenues();
+
+      filtered.forEach(venue => {
+        const marker = L.marker([venue.lat, venue.lng], {
+          icon: createSportMarkerIcon(venue)
+        });
+
+        // Popup Card
+        const popupContent = `
+          <div class="w-64 bg-white overflow-hidden text-left font-sans">
+            <div class="h-28 w-full relative">
+              <img src="${venue.mainImage}" alt="${venue.name}" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 bg-brand-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
+                ★ ${venue.rating}
+              </span>
+            </div>
+            <div class="p-3">
+              <div class="flex items-center gap-1 text-[11px] font-bold text-brand-800 mb-1">
+                <span>${venue.sportIcon}</span>
+                <span>${venue.sportName}</span>
+              </div>
+              <h4 class="font-extrabold text-slate-900 text-xs mb-1 line-clamp-1">${venue.name}</h4>
+              <p class="text-[11px] text-slate-500 mb-2 flex items-center gap-1">
+                📍 ${venue.city} • ${venue.distance}
+              </p>
+              <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                <span class="font-black text-brand-800 text-xs">${venue.priceFormatted}<span class="text-[10px] text-slate-400 font-normal">/jam</span></span>
+                <button onclick="openVenueDetail('${venue.id}')" class="px-2.5 py-1 bg-brand-800 hover:bg-brand-900 text-white text-[11px] font-bold rounded-lg transition">
+                  Detail & Slot
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent, {
+          className: 'custom-popup'
+        });
+
+        marker.on('click', () => {
+          highlightCardInList(venue.id);
+        });
+
+        markersLayer.addLayer(marker);
+      });
+
+      // Fit bounds if we have pins
+      if (filtered.length > 0) {
+        const group = new L.featureGroup(markersLayer.getLayers());
+        map.fitBounds(group.getBounds().pad(0.25));
+      }
+    }
+
+    // --- RENDER LIST CARDS ---
+    function renderVenueCards() {
+      const container = document.getElementById('venueCardsContainer');
+      const filtered = getFilteredVenues();
+
+      document.getElementById('venueCountBadge').textContent = `${filtered.length} Venue`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 px-4 bg-white rounded-2xl border border-dashed border-gray-300">
+            <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-800 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="map-pin-off" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-800">Tidak ada lapangan yang cocok</p>
+            <p class="text-xs text-slate-500 mt-1">Coba ganti filter cabang olahraga atau perbesar radius pencarian Anda.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-brand-800 text-white text-xs font-bold rounded-xl">
+              Reset Semua Filter
+            </button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(venue => `
+        <div id="card-${venue.id}" class="venue-card bg-white rounded-2xl p-3 border border-gray-200/90 hover:border-brand-600 hover:shadow-lg transition-all duration-200 cursor-pointer group" onclick="openVenueDetail('${venue.id}')">
+          <div class="flex gap-3">
+            <!-- Thumbnail Image -->
+            <div class="w-28 sm:w-32 h-32 rounded-xl overflow-hidden shrink-0 relative bg-slate-100">
+              <img src="${venue.mainImage}" alt="${venue.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <span class="absolute top-1.5 left-1.5 px-2 py-0.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold rounded-md flex items-center gap-1">
+                ★ ${venue.rating}
+              </span>
+            </div>
+
+            <!-- Content Info -->
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1">
+                  <span class="text-[11px] font-bold text-brand-800 bg-brand-50 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    <span>${venue.sportIcon}</span>
+                    <span>${venue.sportName}</span>
+                  </span>
+                  <span class="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
+                    <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i>
+                    ${venue.distance}
+                  </span>
+                </div>
+
+                <h3 class="font-extrabold text-sm text-slate-900 mt-1.5 line-clamp-1 group-hover:text-brand-800 transition">
+                  ${venue.name}
+                </h3>
+                <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">${venue.address}</p>
+
+                <!-- Spec badge -->
+                <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                  <span class="text-[10px] font-medium bg-gray-100 text-slate-600 px-2 py-0.5 rounded">
+                    ${venue.courtType}
+                  </span>
+                  <span class="text-[10px] font-medium bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded">
+                    Tersedia Hari Ini
+                  </span>
+                </div>
+              </div>
+
+              <!-- Price & CTA -->
+              <div class="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
+                <div>
+                  <span class="text-[10px] text-slate-400 block font-medium">Mulai dari</span>
+                  <span class="text-sm font-extrabold text-brand-800">${venue.priceFormatted}<span class="text-[11px] font-normal text-slate-500">/jam</span></span>
+                </div>
+                <button class="px-3.5 py-1.5 bg-brand-800 text-white text-xs font-bold rounded-xl shadow-xs group-hover:bg-brand-900 transition flex items-center gap-1">
+                  <span>Lihat Jadwal</span>
+                  <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    // Filter Logic
+    function getFilteredVenues() {
+      return venuesData.filter(v => {
+        const matchSport = currentSportFilter === 'all' || v.sport === currentSportFilter;
+        const matchCity = currentCityFilter === 'all' || v.city === currentCityFilter;
+        return matchSport && matchCity;
+      });
+    }
+
+    function filterBySport(sportKey) {
+      currentSportFilter = sportKey;
+      document.querySelectorAll('.sport-btn').forEach(btn => {
+        if (btn.getAttribute('data-sport') === sportKey) {
+          btn.classList.add('bg-brand-800', 'text-white', 'shadow-sm');
+          btn.classList.remove('bg-gray-100', 'text-slate-700');
+        } else {
+          btn.classList.remove('bg-brand-800', 'text-white', 'shadow-sm');
+          btn.classList.add('bg-gray-100', 'text-slate-700');
+        }
+      });
+      renderVenueCards();
+      renderMapMarkers();
+    }
+
+    function handleCityFilter(cityValue) {
+      currentCityFilter = cityValue;
+      document.getElementById('locationSubtext').innerHTML = cityValue === 'all' 
+        ? 'Menampilkan hasil di <span class="font-semibold text-slate-700">Seluruh Indonesia</span>' 
+        : `Menampilkan hasil di <span class="font-semibold text-slate-700">${cityValue}</span>`;
+
+      renderVenueCards();
+      renderMapMarkers();
+
+      // Pan map based on city
+      if (cityValue === 'Jakarta') map.setView([-6.2088, 106.8456], 12);
+      if (cityValue === 'Bandung') map.setView([-6.9175, 107.6191], 12);
+      if (cityValue === 'Surabaya') map.setView([-7.2575, 112.7521], 12);
+      if (cityValue === 'Bali') map.setView([-8.6705, 115.2126], 12);
+      if (cityValue === 'Medan') map.setView([3.5952, 98.6722], 12);
+    }
+
+    function setRadius(radiusVal) {
+      currentRadius = radiusVal;
+      document.querySelectorAll('.radius-btn').forEach(b => {
+        b.classList.remove('active', 'bg-brand-800', 'text-white', 'shadow-xs');
+        b.classList.add('bg-white', 'text-slate-700');
+      });
+      event.target.classList.add('active', 'bg-brand-800', 'text-white', 'shadow-xs');
+      event.target.classList.remove('bg-white', 'text-slate-700');
+      alert(`Mencari lapangan dalam radius ${radiusVal} km`);
+    }
+
+    function handleQuickSearch(query) {
+      const q = query.toLowerCase();
+      const filtered = venuesData.filter(v => 
+        v.name.toLowerCase().includes(q) || 
+        v.city.toLowerCase().includes(q) || 
+        v.address.toLowerCase().includes(q) ||
+        v.sportName.toLowerCase().includes(q)
+      );
+      // Update view
+      renderVenueCardsCustom(filtered);
+    }
+
+    function renderVenueCardsCustom(list) {
+      document.getElementById('venueCountBadge').textContent = `${list.length} Venue`;
+      const container = document.getElementById('venueCardsContainer');
+      if (list.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-8">Tidak ada hasil ditemukan.</p>`;
+        return;
+      }
+      // Re-use rendering
+      venuesDataFiltered = list;
+      renderVenueCards();
+    }
+
+    function resetFilters() {
+      currentSportFilter = 'all';
+      currentCityFilter = 'all';
+      document.getElementById('citySelect').value = 'all';
+      filterBySport('all');
+    }
+
+    function resetMapToIndonesia() {
+      map.setView([-2.5489, 118.0149], 5);
+    }
+
+    function handleGeolocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude, longitude } = pos.coords;
+            map.setView([latitude, longitude], 14);
+            L.circle([latitude, longitude], { radius: 1000, color: '#1B5E20', fillColor: '#4CAF50', fillOpacity: 0.15 }).addTo(map);
+            alert("Lokasi GPS Anda terdeteksi! Menampilkan lapangan terdekat.");
+          },
+          () => {
+            alert("Akses lokasi ditolak atau tidak didukung browser. Menampilkan posisi default.");
+          }
+        );
+      }
+    }
+
+    function highlightCardInList(venueId) {
+      const card = document.getElementById(`card-${venueId}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('ring-2', 'ring-brand-800', 'bg-brand-50/30');
+        setTimeout(() => {
+          card.classList.remove('ring-2', 'ring-brand-800', 'bg-brand-50/30');
+        }, 1500);
+      }
+    }
+
+    // --- VENUE DETAIL MODAL DRAWER ---
+    function openVenueDetail(venueId) {
+      const venue = venuesData.find(v => v.id === venueId);
+      if (!venue) return;
+
+      currentActiveVenue = venue;
+      selectedSlot = null;
+
+      // Fill Content
+      document.getElementById('modalVenueName').textContent = venue.name;
+      document.getElementById('modalVenueCity').textContent = `${venue.address} • ${venue.city}, ${venue.province}`;
+      document.getElementById('modalMainImg').src = venue.mainImage;
+      document.getElementById('modalSubImg1').src = venue.gallery[1] || venue.mainImage;
+      document.getElementById('modalSubImg2').src = venue.gallery[2] || venue.mainImage;
+      document.getElementById('modalRatingAvg').textContent = venue.rating;
+      document.getElementById('modalReviewCount').textContent = `${venue.reviewsCount} ulasan pemain terverifikasi`;
+      document.getElementById('modalDescription').textContent = venue.description;
+      document.getElementById('modalHours').textContent = venue.hours;
+      document.getElementById('modalFloorType').textContent = venue.floorType;
+      document.getElementById('modalPriceSummary').textContent = venue.priceFormatted;
+
+      // Amenities
+      const amenitiesContainer = document.getElementById('modalAmenitiesList');
+      amenitiesContainer.innerHTML = venue.amenities.map(a => `
+        <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-slate-700">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-brand-800"></i>
+          <span>${a}</span>
+        </div>
+      `).join('');
+
+      // Render Time Slots
+      renderTimeSlots(venue);
+
+      // Render Reviews
+      renderReviews();
+
+      // Show Modal
+      const modal = document.getElementById('venueDetailModal');
+      const drawer = document.getElementById('drawerPanel');
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.classList.add('opacity-100');
+      drawer.classList.remove('translate-x-full');
+
+      lucide.createIcons();
+    }
+
+    function closeVenueDetail() {
+      const modal = document.getElementById('venueDetailModal');
+      const drawer = document.getElementById('drawerPanel');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      drawer.classList.add('translate-x-full');
+    }
+
+    // Time Slot Selector
+    function renderTimeSlots(venue) {
+      const grid = document.getElementById('slotGrid');
+      grid.innerHTML = venue.slots.map(slot => {
+        const isBooked = venue.bookedSlots.includes(slot);
+        if (isBooked) {
+          return `
+            <button disabled class="py-2.5 px-2 rounded-xl bg-gray-100 text-gray-400 font-semibold cursor-not-allowed text-center border border-gray-200 line-through">
+              ${slot}
+            </button>
+          `;
+        }
+        return `
+          <button onclick="selectTimeSlot('${slot}')" id="slot-btn-${slot}" class="slot-select-btn py-2.5 px-2 rounded-xl bg-brand-100/70 hover:bg-brand-200 text-brand-900 font-bold transition text-center border border-brand-300">
+            ${slot}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectTimeSlot(slot) {
+      selectedSlot = slot;
+      document.querySelectorAll('.slot-select-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-800', 'text-white', 'shadow-md');
+        btn.classList.add('bg-brand-100/70', 'text-brand-900');
+      });
+
+      const activeBtn = document.getElementById(`slot-btn-${slot}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-brand-100/70', 'text-brand-900');
+        activeBtn.classList.add('bg-brand-800', 'text-white', 'shadow-md');
+      }
+
+      document.getElementById('slotSelectedLabel').textContent = `• Jam ${slot} WIB`;
+    }
+
+    function changeDateTab(tab) {
+      if (tab === 'today') {
+        document.getElementById('tabToday').classList.add('bg-white', 'text-brand-800', 'shadow-xs');
+        document.getElementById('tabToday').classList.remove('text-slate-600');
+        document.getElementById('tabTomorrow').classList.remove('bg-white', 'text-brand-800', 'shadow-xs');
+        document.getElementById('tabTomorrow').classList.add('text-slate-600');
+      } else {
+        document.getElementById('tabTomorrow').classList.add('bg-white', 'text-brand-800', 'shadow-xs');
+        document.getElementById('tabTomorrow').classList.remove('text-slate-600');
+        document.getElementById('tabToday').classList.remove('bg-white', 'text-brand-800', 'shadow-xs');
+        document.getElementById('tabToday').classList.add('text-slate-600');
+      }
+      if (currentActiveVenue) renderTimeSlots(currentActiveVenue);
+    }
+
+    function renderReviews() {
+      const container = document.getElementById('reviewsContainer');
+      container.innerHTML = sampleReviews.map(r => `
+        <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-100 text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-brand-800 text-white font-bold flex items-center justify-center text-[11px]">
+                ${r.user.charAt(0)}
+              </span>
+              <div>
+                <p class="font-bold text-slate-800">${r.user}</p>
+                <span class="text-[10px] text-brand-700 font-semibold flex items-center gap-0.5">
+                  <i data-lucide="badge-check" class="w-3 h-3 text-brand-600"></i> ${r.role}
+                </span>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="text-amber-500 font-bold">★ ${r.rating}.0</span>
+              <p class="text-[10px] text-slate-400">${r.date}</p>
+            </div>
+          </div>
+          <p class="text-slate-600 text-xs leading-relaxed">"${r.comment}"</p>
+          ${r.ownerReply ? `
+            <div class="mt-2 pl-3 border-l-2 border-brand-500 bg-white p-2 rounded-r-lg text-[11px] text-slate-600">
+              <span class="font-bold text-brand-800 block mb-0.5">Tanggapan Pengelola:</span>
+              ${r.ownerReply}
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Checkout Modal
+    function handleCheckout() {
+      if (!selectedSlot) {
+        alert("Silakan pilih jam main (slot waktu) terlebih dahulu!");
+        return;
+      }
+      document.getElementById('coVenue').textContent = currentActiveVenue.name;
+      document.getElementById('coTime').textContent = `Hari ini, ${selectedSlot} - ${parseInt(selectedSlot)+1}:00 WIB`;
+      document.getElementById('coPrice').textContent = currentActiveVenue.priceFormatted;
+
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+      closeVenueDetail();
+      alert("Terima kasih! Tiket dan barcode booking telah dikirimkan ke WhatsApp & Akun Anda.");
+    }
+
+    // Filter Specification Drawer
+    function toggleFilterDrawer() {
+      const modal = document.getElementById('filterModal');
+      modal.classList.toggle('hidden');
+    }
+
+    function applyFilters() {
+      toggleFilterDrawer();
+      alert("Filter spesifikasi diterapkan!");
+    }
+
+    function shareVenue() {
+      navigator.clipboard?.writeText(window.location.href);
+      alert("Tautan lapangan disalin ke clipboard!");
+    }
+
+    function bookmarkVenue() {
+      alert("Lapangan berhasil disimpan ke daftar favorit Anda!");
+    }
+
+    function openReviewModal() {
+      const text = prompt("Tulis ulasan Anda untuk lapangan ini:");
+      if (text) {
+        sampleReviews.unshift({
+          user: "Rian Pratama",
+          role: "Verified Booker",
+          rating: 5,
+          date: "Baru saja",
+          comment: text,
+          ownerReply: null
+        });
+        renderReviews();
+        lucide.createIcons();
+      }
+    }
+
+    function toggleUserModal() {
+      alert("Akun: Rian Pratama (Pemain Terverifikasi)\nRole: User / Booker\nWilayah: DKI Jakarta");
+    }
+
+    // BOOTSTRAP PADA LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initMap();
+      renderVenueCards();
+    });
+  </script>
+</body>
+</html>

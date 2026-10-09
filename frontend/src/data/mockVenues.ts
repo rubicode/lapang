@@ -1,0 +1,230 @@
+import { Venue, ReviewItem, SportFilter, CityOption } from '../types';
+
+export const INITIAL_VENUES: Venue[] = [
+  {
+    id: "v-1",
+    slug: "the-emerald-arena-jakarta",
+    name: "The Emerald Arena Jakarta",
+    sport: "futsal",
+    sportName: "Futsal & Mini Soccer",
+    sportIcon: "⚽",
+    city: "Jakarta",
+    province: "DKI Jakarta",
+    address: "Jl. TB Simatupang No. 18, Cilandak, Jakarta Selatan",
+    lat: -6.2941,
+    lng: 106.8044,
+    distance: "1.8 km",
+    distanceKm: 1.8,
+    priceHourly: 175000,
+    priceFormatted: "Rp 175.000",
+    rating: 4.9,
+    reviewsCount: 142,
+    floorType: "Rumput Sintetis Monofilament FIFA Standard",
+    courtType: "Semi-Indoor",
+    hours: "06:00 - 24:00 WIB",
+    description: "Venue mini soccer dan futsal premium dengan rumput sintetis standar internasional. Dilengkapi lampu floodlight 500 lux untuk pertandingan malam hari, ruang ganti ber-AC, dan shower air panas.",
+    mainImage: "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=500&q=80",
+      "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=500&q=80"
+    ],
+    amenities: ["Parkir Luas Mobil/Motor", "Shower Air Hangat", "Kantin & Coffee Shop", "Musholla AC", "Loker & Ruang Ganti", "Sewa Rompi & Bola"],
+    slots: ["08:00", "09:00", "10:00", "14:00", "15:00", "16:00", "19:00", "20:00", "21:00"],
+    bookedSlots: ["08:00", "15:00", "19:00"]
+  },
+  {
+    id: "v-2",
+    slug: "gor-badminton-bintang-dago",
+    name: "GOR Badminton Bintang Dago",
+    sport: "badminton",
+    sportName: "Badminton",
+    sportIcon: "🏸",
+    city: "Bandung",
+    province: "Jawa Barat",
+    address: "Jl. Ir. H. Juanda No. 84, Dago, Kota Bandung",
+    lat: -6.8850,
+    lng: 107.6136,
+    distance: "2.4 km",
+    distanceKm: 2.4,
+    priceHourly: 85000,
+    priceFormatted: "Rp 85.000",
+    rating: 4.8,
+    reviewsCount: 96,
+    floorType: "Karpet Vinyl BWF Approved 5mm",
+    courtType: "Indoor Hall",
+    hours: "07:00 - 23:00 WIB",
+    description: "Pusat bulu tangkis terlengkap di Bandung dengan 6 lapangan karpet vinyl standar kejuaraan BWF. Sirkulasi udara sejuk pegunungan tanpa hembusan angin yang mengganggu jalannya shuttlecock.",
+    mainImage: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-161391808466-292b78a8ef95?auto=format&fit=crop&w=500&q=80",
+      "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&w=500&q=80"
+    ],
+    amenities: ["Karpet Vinyl BWF", "Parkir Mobil", "Musholla", "Kantin Minuman", "Penyewaan Raket", "Shower Air Bersih"],
+    slots: ["07:00", "08:00", "10:00", "11:00", "16:00", "17:00", "19:00", "20:00"],
+    bookedSlots: ["10:00", "19:00"]
+  },
+  {
+    id: "v-3",
+    slug: "sanur-padel-tennis-club",
+    name: "Sanur Padel & Tennis Club",
+    sport: "padel",
+    sportName: "Tenis & Padel",
+    sportIcon: "🎾",
+    city: "Bali",
+    province: "Bali",
+    address: "Jl. Danau Tamblingan No. 102, Sanur, Denpasar Selatan",
+    lat: -8.6981,
+    lng: 115.2625,
+    distance: "3.1 km",
+    distanceKm: 3.1,
+    priceHourly: 220000,
+    priceFormatted: "Rp 220.000",
+    rating: 4.95,
+    reviewsCount: 210,
+    floorType: "Panoramic Glass & Textured Silica Turf",
+    courtType: "Outdoor Coastal Court",
+    hours: "06:00 - 22:00 WITA",
+    description: "Fasilitas Padel Tennis standar turnamen di pinggir pantai Sanur. Nikmati match seru dengan angin pantai sejuk, kafe hidangan sehat organik, dan pro shop peralatan tenis terkini.",
+    mainImage: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=500&q=80",
+      "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80"
+    ],
+    amenities: ["Panoramic Glass Court", "Lounge & Juice Bar", "Shower Air Hangat", "Instruktur Profesional", "Parkir Luas", "Free Wi-Fi"],
+    slots: ["07:00", "08:30", "10:00", "15:00", "16:30", "18:00", "19:30"],
+    bookedSlots: ["08:30", "18:00"]
+  },
+  {
+    id: "v-4",
+    slug: "surabaya-pro-basketball-center",
+    name: "Surabaya Pro Basketball Center",
+    sport: "basketball",
+    sportName: "Bola Basket",
+    sportIcon: "🏀",
+    city: "Surabaya",
+    province: "Jawa Timur",
+    address: "Jl. Mayjen Sungkono No. 55, Sawahan, Surabaya",
+    lat: -7.2917,
+    lng: 112.7239,
+    distance: "4.2 km",
+    distanceKm: 4.2,
+    priceHourly: 190000,
+    priceFormatted: "Rp 190.000",
+    rating: 4.75,
+    reviewsCount: 88,
+    floorType: "FIBA Certified Maple Hardwood Floor",
+    courtType: "Indoor Stadium",
+    hours: "08:00 - 23:00 WIB",
+    description: "Lapangan basket kayu maple bersertifikasi FIBA dengan ring pegas hidrolik profesional. Cocok untuk sparring turnamen resmi maupun latihan rutin komunitas basket Jawa Timur.",
+    mainImage: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?auto=format&fit=crop&w=500&q=80"
+    ],
+    amenities: ["FIBA Wooden Court", "Tribun 200 Penonton", "Scoreboard Digital LED", "Kamar Ganti + Loker", "Parkir Mobil"],
+    slots: ["08:00", "10:00", "13:00", "15:00", "17:00", "19:00", "21:00"],
+    bookedSlots: ["17:00", "19:00"]
+  },
+  {
+    id: "v-5",
+    slug: "grand-futsal-interlock-kuningan",
+    name: "Grand Futsal Interlock Kuningan",
+    sport: "futsal",
+    sportName: "Futsal",
+    sportIcon: "⚽",
+    city: "Jakarta",
+    province: "DKI Jakarta",
+    address: "Jl. Rasuna Said Kav. 8, Setiabudi, Jakarta Selatan",
+    lat: -6.2215,
+    lng: 106.8315,
+    distance: "3.5 km",
+    distanceKm: 3.5,
+    priceHourly: 160000,
+    priceFormatted: "Rp 160.000",
+    rating: 4.85,
+    reviewsCount: 164,
+    floorType: "Interlocking Polypropylene Floor",
+    courtType: "Indoor Air Conditioned",
+    hours: "07:00 - 24:00 WIB",
+    description: "Lokasi strategis di pusat perkantoran Kuningan. Lapangan interlock berkualitas empuk meredam benturan lutut, penerangan LED daylight merata, dan kafetaria lengkap.",
+    mainImage: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=500&q=80"
+    ],
+    amenities: ["Lantai Interlock Safe", "Shower Hangat", "Musholla", "Kantin & Minuman Dingin", "Sewa Rompi & Bola"],
+    slots: ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
+    bookedSlots: ["18:00", "20:00"]
+  },
+  {
+    id: "v-6",
+    slug: "voli-pantai-taraflex-indoor-medan",
+    name: "Voli Pantai & Taraflex Indoor Medan",
+    sport: "volleyball",
+    sportName: "Bola Voli",
+    sportIcon: "🏐",
+    city: "Medan",
+    province: "Sumatera Utara",
+    address: "Jl. Ringroad No. 12, Medan Sunggal, Kota Medan",
+    lat: 3.5852,
+    lng: 98.6256,
+    distance: "5.8 km",
+    distanceKm: 5.8,
+    priceHourly: 120000,
+    priceFormatted: "Rp 120.000",
+    rating: 4.7,
+    reviewsCount: 52,
+    floorType: "Gerflor Taraflex Sport M Plus 7mm",
+    courtType: "Indoor Hall",
+    hours: "08:00 - 22:00 WIB",
+    description: "Satu-satunya gelanggang voli indoor di Sumatera Utara dengan karpet Taraflex empuk berstandar FIVB. Mencegah cedera engkel dan lutut bagi atlet dan pecinta bola voli.",
+    mainImage: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=800&q=80"
+    ],
+    amenities: ["Lantai Taraflex FIVB", "Ruang Ganti Nyaman", "Parkir Mobil/Motor", "Musholla", "First Aid Kit"],
+    slots: ["08:00", "10:00", "14:00", "16:00", "18:00", "20:00"],
+    bookedSlots: ["16:00"]
+  }
+];
+
+export const SAMPLE_REVIEWS: ReviewItem[] = [
+  {
+    user: "Bagus Hendrawan",
+    role: "Verified Booker",
+    rating: 5,
+    date: "2 hari yang lalu",
+    comment: "Rumput sintetis empuk banget dan gak bikin lecet saat tackling. Lampu malamnya terang merata tanpa silau. Staf lapangan ramah sekali!",
+    ownerReply: "Terima kasih Mas Bagus! Senang tim Anda puas bermain di lapangan kami. Sampai jumpa di jadwal sparring berikutnya!"
+  },
+  {
+    user: "Indra Kusuma",
+    role: "Verified Booker",
+    rating: 4.8,
+    date: "1 minggu yang lalu",
+    comment: "Kamar mandi bersih dengan shower air hangat mantap setelah keringat deras. Parkir mobil luas dan aman. Sangat direkomendasikan untuk komunitas.",
+    ownerReply: null
+  }
+];
+
+export const SPORT_CATEGORIES: SportFilter[] = [
+  { id: 'all', name: 'Semua Cabang', icon: '⚡' },
+  { id: 'futsal', name: 'Futsal & Mini Soccer', icon: '⚽' },
+  { id: 'badminton', name: 'Badminton', icon: '🏸' },
+  { id: 'basketball', name: 'Basket (Full/3x3)', icon: '🏀' },
+  { id: 'padel', name: 'Tenis & Padel', icon: '🎾' },
+  { id: 'volleyball', name: 'Bola Voli', icon: '🏐' }
+];
+
+export const CITY_OPTIONS: CityOption[] = [
+  { id: 'all', name: '📍 Seluruh Indonesia (38 Provinsi)' },
+  { id: 'Jakarta', name: 'Jakarta & Sekitarnya (Jabodetabek)', lat: -6.2088, lng: 106.8456 },
+  { id: 'Bandung', name: 'Bandung Raya (Jawa Barat)', lat: -6.9175, lng: 107.6191 },
+  { id: 'Surabaya', name: 'Surabaya & Sidoarjo (Jawa Timur)', lat: -7.2575, lng: 112.7521 },
+  { id: 'Bali', name: 'Denpasar & Badung (Bali)', lat: -8.6705, lng: 115.2126 },
+  { id: 'Medan', name: 'Medan (Sumatera Utara)', lat: 3.5952, lng: 98.6722 },
+  { id: 'Makassar', name: 'Makassar (Sulawesi Selatan)', lat: -5.1477, lng: 119.4327 }
+];
