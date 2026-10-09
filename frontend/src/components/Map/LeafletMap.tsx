@@ -8,7 +8,7 @@ interface LeafletMapProps {
   venues: Venue[];
   activeVenueId?: string | null;
   onSelectVenue: (venue: Venue) => void;
-  onResetToIndonesia: () => void;
+  onResetToIndonesia?: () => void;
   centerCoords?: [number, number];
   zoomLevel?: number;
 }

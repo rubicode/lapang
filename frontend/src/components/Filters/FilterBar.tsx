@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
-import { SPORT_CATEGORIES, CITY_OPTIONS } from '@/data/mockVenues';
+import { SportFilter, CityOption } from '@/types';
 
 interface FilterBarProps {
+  categories?: SportFilter[];
+  cities?: CityOption[];
   activeSport: string;
   onSelectSport: (sportId: string) => void;
   activeCity: string;
@@ -13,6 +15,8 @@ interface FilterBarProps {
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
+  categories = [{ id: 'all', name: 'Semua Cabang', icon: '⚡' }],
+  cities = [{ id: 'all', name: '📍 Seluruh Indonesia (38 Provinsi)' }],
   activeSport,
   onSelectSport,
   activeCity,
@@ -23,7 +27,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     <div className="bg-white border-t border-gray-100 px-4 lg:px-6 py-2.5 flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar shrink-0 z-20">
       {/* Sport Category Buttons */}
       <div className="flex items-center gap-2 shrink-0">
-        {SPORT_CATEGORIES.map((cat) => {
+        {categories.map((cat) => {
           const isActive = activeSport === cat.id;
           return (
             <button
@@ -51,7 +55,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             onChange={(e) => onSelectCity(e.target.value)}
             className="text-xs font-bold text-slate-700 bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 pr-7 focus:outline-none focus:border-brand-800 appearance-none cursor-pointer hover:bg-gray-200 transition"
           >
-            {CITY_OPTIONS.map((c) => (
+            {cities.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>

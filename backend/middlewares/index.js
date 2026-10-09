@@ -2,6 +2,7 @@ import multer from 'multer';
 import { errorResponse } from '../utils/response.js';
 import { HTTP_STATUS } from '../constants/index.js';
 import { ENV } from '../config/environment.js';
+export { authenticate, optionalAuth, authorize } from './auth.js';
 
 // Multer memory storage untuk validasi buffer di service
 const storage = multer.memoryStorage();

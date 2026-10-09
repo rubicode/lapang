@@ -12,7 +12,10 @@ export class VenueController {
         lat,
         lng,
         search,
-        sort = 'recommended'
+        sort = 'recommended',
+        court_types,
+        floor_types,
+        amenities
       } = req.query;
 
       const venues = await VenueService.getVenues({
@@ -22,7 +25,10 @@ export class VenueController {
         userLat: lat,
         userLng: lng,
         search,
-        sort
+        sort,
+        court_types,
+        floor_types,
+        amenities
       });
 
       return successResponse(res, 'Daftar lapangan berhasil diambil', venues, HTTP_STATUS.OK, {
@@ -49,28 +55,72 @@ export class VenueController {
     }
   }
 
-  static async getCategories(req, res) {
-    const categories = [
-      { id: 'all', name: 'Semua Cabang', icon: '⚡' },
-      { id: 'futsal', name: 'Futsal & Mini Soccer', icon: '⚽' },
-      { id: 'badminton', name: 'Badminton', icon: '🏸' },
-      { id: 'basketball', name: 'Basket (Full/3x3)', icon: '🏀' },
-      { id: 'padel', name: 'Tenis & Padel', icon: '🎾' },
-      { id: 'volleyball', name: 'Bola Voli', icon: '🏐' }
-    ];
-    return successResponse(res, 'Daftar kategori olahraga', categories);
+  static async getCategories(req, res, next) {
+    try {
+      const categories = await VenueService.getCategories();
+      return successResponse(res, 'Daftar kategori olahraga', categories);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  static async getCities(req, res) {
-    const cities = [
-      { id: 'all', name: '📍 Seluruh Indonesia (38 Provinsi)' },
-      { id: 'Jakarta', name: 'Jakarta & Sekitarnya (Jabodetabek)', lat: -6.2088, lng: 106.8456 },
-      { id: 'Bandung', name: 'Bandung Raya (Jawa Barat)', lat: -6.9175, lng: 107.6191 },
-      { id: 'Surabaya', name: 'Surabaya & Sidoarjo (Jawa Timur)', lat: -7.2575, lng: 112.7521 },
-      { id: 'Bali', name: 'Denpasar & Badung (Bali)', lat: -8.6705, lng: 115.2126 },
-      { id: 'Medan', name: 'Medan (Sumatera Utara)', lat: 3.5952, lng: 98.6722 },
-      { id: 'Makassar', name: 'Makassar (Sulawesi Selatan)', lat: -5.1477, lng: 119.4327 }
-    ];
-    return successResponse(res, 'Daftar kota utama Indonesia', cities);
+  static async getCities(req, res, next) {
+    try {
+      const rawCities = await VenueService.getCities();
+      const cities = rawCities.map(c => ({
+        id: c.name,
+        name: `${c.name} (${c.province?.name || ''})`,
+        lat: Number(c.latitude),
+        lng: Number(c.longitude)
+      }));
+      return successResponse(res, 'Daftar kota Indonesia', cities);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getVenueReviews(req, res, next) {
+    try {
+      const { idOrSlug } = req.params;
+      const result = await VenueService.getVenueReviews(idOrSlug);
+      return successResponse(res, 'Ulasan lapangan berhasil diambil', result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async addReview(req, res, next) {
+    try {
+      const { idOrSlug } = req.params;
+      const review = await VenueService.addReview(idOrSlug, req.body, req.user);
+      return successResponse(res, 'Ulasan berhasil ditambahkan', review, HTTP_STATUS.CREATED);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async replyReview(req, res, next) {
+    try {
+      const { reviewId } = req.params;
+      const { reply } = req.body;
+      if (!reply || !reply.trim()) {
+        return errorResponse(res, 'Teks balasan ulasan wajib diisi', null, HTTP_STATUS.BAD_REQUEST);
+      }
+      const updated = await VenueService.replyReview(reviewId, reply, req.user);
+      return successResponse(res, 'Balasan ulasan berhasil disimpan', updated);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getVenueSchedules(req, res, next) {
+    try {
+      const { idOrSlug } = req.params;
+      const { date } = req.query;
+      const schedules = await VenueService.getVenueSchedules(idOrSlug, date);
+      return successResponse(res, 'Jadwal slot waktu berhasil diambil', schedules);
+    } catch (error) {
+      next(error);
+    }
   }
 }

@@ -27,5 +27,9 @@ export const ENV = Object.freeze({
   // Security & Client URLs
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS 
     ? process.env.ALLOWED_ORIGINS.split(',') 
-    : ['http://localhost:3000', 'http://127.0.0.1:3000']
+    : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    
+  // Authentication & RBAC
+  JWT_SECRET: process.env.JWT_SECRET || 'super-secret-lapang-jwt-key-2026-production-ready',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d'
 });

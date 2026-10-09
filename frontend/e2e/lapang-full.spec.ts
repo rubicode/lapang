@@ -57,12 +57,12 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     await expect(page.locator('text=Jenis Lantai')).toBeVisible();
 
     // Ulasan & Rating Breakdown
-    await expect(page.locator('text=Ulasan Pemain Terverifikasi')).toBeVisible();
+    await expect(page.getByText('Ulasan Pemain Terverifikasi', { exact: true })).toBeVisible();
     await expect(page.locator('text=Kualitas Lantai')).toBeVisible();
     await expect(page.locator('text=Penerangan Lampu')).toBeVisible();
     await expect(page.locator('text=Kebersihan & Toilet')).toBeVisible();
     await expect(page.locator('text=Pelayanan Staf')).toBeVisible();
-    await expect(page.locator('text=Bagus Hendrawan')).toBeVisible();
+    await expect(page.locator('text=Verified Booker').first()).toBeVisible();
   });
 
   test('4. Alur Pemilihan Slot Jam & Checkout Midtrans QRIS', async ({ page }) => {
@@ -112,4 +112,38 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     await expect(applyBtn).toBeVisible();
     await applyBtn.click();
   });
+
+  test('6. Verifikasi UI Modal Login & Register Sesuai Desain Mockup', async ({ page }) => {
+    // Klik profil atau tombol akun untuk membuka modal auth
+    const profileBtn = page.locator('text=Rian Pratama');
+    await expect(profileBtn).toBeVisible();
+    await profileBtn.click();
+
+    // Verifikasi elemen visual mockup sisi kiri (The Pitch is Waiting)
+    await expect(page.locator('text=Lapangan Siap')).toBeVisible();
+    await expect(page.locator('text=Menunggumu.')).toBeVisible();
+
+    // Verifikasi elemen formulir login sisi kanan
+    await expect(page.locator('text=Selamat Datang')).toBeVisible();
+    await expect(page.locator('input[type="email"]')).toBeVisible();
+    await expect(page.locator('input[type="password"]')).toBeVisible();
+    await expect(page.locator('text=Ingat saya selama 30 hari')).toBeVisible();
+    await expect(page.locator('button:has-text("Masuk Sekarang")')).toBeVisible();
+    await expect(page.locator('text=Atau Lanjutkan Dengan')).toBeVisible();
+    await expect(page.locator('button:has-text("Google")')).toBeVisible();
+    await expect(page.locator('button:has-text("Facebook")')).toBeVisible();
+
+    // Beralih ke Register
+    const switchRegisterBtn = page.locator('button:has-text("Daftar sekarang")');
+    await expect(switchRegisterBtn).toBeVisible();
+    await switchRegisterBtn.click();
+
+    // Verifikasi form register
+    await expect(page.locator('text=Buat Akun Baru')).toBeVisible();
+    await expect(page.locator('input[placeholder*="Rian Pratama"]')).toBeVisible();
+    await expect(page.locator('button:has-text("Pemain Olahraga")')).toBeVisible();
+    await expect(page.locator('button:has-text("Pengelola Venue")')).toBeVisible();
+    await expect(page.locator('button:has-text("Daftar Sekarang")')).toBeVisible();
+  });
 });
+

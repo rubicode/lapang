@@ -28,12 +28,33 @@ export interface Venue {
 }
 
 export interface ReviewItem {
+  id?: string;
   user: string;
   role: string;
   rating: number;
   date: string;
   comment: string;
   ownerReply?: string | null;
+  rating_floor?: number;
+  rating_lighting?: number;
+  rating_cleanliness?: number;
+  rating_hospitality?: number;
+}
+
+export interface ReviewAspects {
+  floor: number;
+  lighting: number;
+  cleanliness: number;
+  hospitality: number;
+}
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: 'user' | 'owner' | 'admin';
+  is_verified_player?: boolean;
 }
 
 export interface SportFilter {
