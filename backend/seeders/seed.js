@@ -30,7 +30,8 @@ export async function runFullSeed() {
     marcoUser,
     sarahUser,
     robertUser,
-    davidUser
+    davidUser,
+    marcusUser
   ] = await Promise.all([
     User.create({
       id: '10000000-0000-0000-0000-000000000001',
@@ -100,6 +101,16 @@ export async function runFullSeed() {
       password_hash: passwordHash,
       role: USER_ROLES.OWNER,
       avatar_url: null,
+      is_verified_player: true
+    }),
+    User.create({
+      id: '10000000-0000-0000-0000-000000000008',
+      name: 'Marcus Silva',
+      email: 'marcus@lapang.id',
+      phone: '+62 812 3456 7890',
+      password_hash: passwordHash,
+      role: USER_ROLES.OWNER,
+      avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
       is_verified_player: true
     })
   ]);
@@ -449,6 +460,40 @@ export async function runFullSeed() {
       verification_status: 'Verified',
       verification_submitted_at: new Date('2023-10-10T16:00:00Z'),
       sport_type: 'Bola Voli'
+    },
+    {
+      id: '11110000-0000-0000-0000-000000000009',
+      owner_id: marcusUser.id,
+      city_id: 1,
+      name: 'Pitch Gallery Sports Complex',
+      slug: 'pitch-gallery-sports-complex',
+      city_name: 'Jakarta',
+      province_name: 'DKI Jakarta',
+      address: 'Downtown Sports District, Central Blvd No. 1',
+      district: 'Downtown Sports District',
+      unique_visitors_count: 3842,
+      currency: 'USD',
+      early_bird_promo_active: false,
+      early_bird_discount_percent: 20,
+      latitude: -6.2088,
+      longitude: 106.8456,
+      phone_number: '+62 812 3456 7890',
+      opening_hours: '06:00 - 24:00',
+      floor_type: 'FIFA Standard Turf & Premium Rubber',
+      court_type: 'Outdoor & Indoor Turf',
+      base_price_hourly: 85,
+      main_image_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=800&q=80'
+      ],
+      description: 'Kompleks lapangan premium berstandar internasional yang dikelola oleh Marcus Silva.',
+      rating_avg: 4.90,
+      review_count: 142,
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-08-10T10:00:00Z'),
+      sport_type: 'Sepak Bola / Mini Soccer'
     }
   ];
 
@@ -571,6 +616,77 @@ export async function runFullSeed() {
       active_players_count: 12,
       lighting_telemetry: 'Indoor 750 Lux',
       temperature_telemetry: '24°C'
+    },
+    // --- Marcus Silva Courts (Pitch Gallery Dashboard Assets) ---
+    {
+      id: 'aaaa9999-1111-1111-1111-111111111111',
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      category_id: 'futsal',
+      name: 'Arena X Elite',
+      floor_type: 'Turf Pro FIFA Standard',
+      court_type: 'outdoor',
+      match_format: '5-a-side',
+      surface_spec: 'Outdoor Pro',
+      price_hourly: 85,
+      main_image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      images: [
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1529900245534-47fbf5de828a?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 85,
+      active_players_count: 10,
+      current_match: 'Downtown League 5v5',
+      lighting_telemetry: 'Active (1000 Lux)',
+      temperature_telemetry: '22°C',
+      pitch_health_telemetry: 'Optimal (Moisture 20%)',
+      time_remaining: '25 mins remaining'
+    },
+    {
+      id: 'aaaa9999-2222-2222-2222-222222222222',
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      category_id: 'futsal',
+      name: 'The Forest Turf',
+      floor_type: 'Synthetic Grass Monofilament',
+      court_type: 'indoor',
+      match_format: '7-a-side',
+      surface_spec: 'Indoor',
+      price_hourly: 110,
+      main_image: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=800&q=80',
+      images: [
+        'https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 90,
+      active_players_count: 14,
+      current_match: 'Corporate Cup Semifinal',
+      lighting_telemetry: 'Active (800 Lux)',
+      temperature_telemetry: '21°C Indoor',
+      pitch_health_telemetry: 'Excellent (Moisture 18%)',
+      time_remaining: '40 mins remaining'
+    },
+    {
+      id: 'aaaa9999-3333-3333-3333-333333333333',
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      category_id: 'futsal',
+      name: 'Suburban Green Pitch',
+      floor_type: 'Natural Hybrid Turf',
+      court_type: 'outdoor',
+      match_format: '5-a-side',
+      surface_spec: 'Turf Pro',
+      price_hourly: 95,
+      main_image: 'https://images.unsplash.com/photo-1529900245534-47fbf5de828a?auto=format&fit=crop&w=800&q=80',
+      images: [
+        'https://images.unsplash.com/photo-1529900245534-47fbf5de828a?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 65,
+      active_players_count: 10,
+      lighting_telemetry: 'Active (900 Lux)',
+      temperature_telemetry: '23°C'
     }
   ];
 
@@ -722,8 +838,101 @@ export async function runFullSeed() {
       payment_status: PAYMENT_STATUS.SETTLEMENT,
       booking_status: BOOKING_STATUS.CONFIRMED,
       midtrans_snap_token: 'SNAP-demo-token-003'
+    },
+    // --- Marcus Silva Bookings (Pitch Gallery Overview Dashboard) ---
+    {
+      id: 'b9999999-1111-1111-1111-111111111111',
+      booking_code: 'PITCH-2024-001',
+      user_id: playerUser.id,
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      court_id: 'aaaa9999-1111-1111-1111-111111111111',
+      venue_name: 'Arena X Elite',
+      customer_name: 'Julian Draxler',
+      customer_phone: '+62 811 2233 4455',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '18:00 - 19:00',
+      total_amount: 85,
+      payment_method: 'Stripe',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      created_at: new Date(Date.now() - 10 * 60 * 1000)
+    },
+    {
+      id: 'b9999999-2222-2222-2222-222222222222',
+      booking_code: 'PITCH-2024-002',
+      user_id: playerUser.id,
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      court_id: 'aaaa9999-2222-2222-2222-222222222222',
+      venue_name: 'The Forest Turf',
+      customer_name: 'Marta Lima',
+      customer_phone: '+62 811 2233 4466',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '20:00 - 21:00',
+      total_amount: 110,
+      payment_method: 'Stripe',
+      payment_status: PAYMENT_STATUS.UNPAID,
+      booking_status: BOOKING_STATUS.PENDING,
+      created_at: new Date(Date.now() - 35 * 60 * 1000)
+    },
+    {
+      id: 'b9999999-3333-3333-3333-333333333333',
+      booking_code: 'PITCH-2024-003',
+      user_id: playerUser.id,
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      court_id: 'aaaa9999-1111-1111-1111-111111111111',
+      venue_name: 'Arena X Elite',
+      customer_name: 'Robert K.',
+      customer_phone: '+62 811 2233 4477',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '16:00 - 17:00',
+      total_amount: 85,
+      payment_method: 'Stripe',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      created_at: new Date(Date.now() - 90 * 60 * 1000)
+    },
+    {
+      id: 'b9999999-4444-4444-4444-444444444444',
+      booking_code: 'PITCH-2024-004',
+      user_id: playerUser.id,
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      court_id: 'aaaa9999-2222-2222-2222-222222222222',
+      venue_name: 'The Forest Turf',
+      customer_name: 'Sarah Hughes',
+      customer_phone: '+62 811 2233 4488',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '09:00 - 10:00',
+      total_amount: 0,
+      payment_method: 'Stripe',
+      payment_status: PAYMENT_STATUS.CANCEL,
+      booking_status: BOOKING_STATUS.CANCELLED,
+      created_at: new Date(Date.now() - 150 * 60 * 1000)
     }
   ];
+
+  // Tambahkan booking riil historis untuk Marcus Silva agar total revenue tepat $24,580 dan active bookings tepat 142
+  for (let i = 1; i <= 139; i++) {
+    const amount = (i === 139) ? 260 : 175;
+    const courtId = (i % 2 === 0) ? 'aaaa9999-1111-1111-1111-111111111111' : 'aaaa9999-2222-2222-2222-222222222222';
+    const courtName = (i % 2 === 0) ? 'Arena X Elite' : 'The Forest Turf';
+    bookingsData.push({
+      id: `b8880000-0000-0000-0000-${String(i).padStart(12, '0')}`,
+      booking_code: `PITCH-HIST-${1000 + i}`,
+      user_id: playerUser.id,
+      venue_id: '11110000-0000-0000-0000-000000000009',
+      court_id: courtId,
+      venue_name: courtName,
+      customer_name: `Member Player ${i}`,
+      customer_phone: `+62 812 0000 ${String(i).padStart(4, '0')}`,
+      date: new Date(Date.now() - (i % 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      time_slot: `${10 + (i % 10)}:00 - ${11 + (i % 10)}:00`,
+      total_amount: amount,
+      payment_method: 'Stripe',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      created_at: new Date(Date.now() - (i * 2 + 5) * 60 * 60 * 1000)
+    });
+  }
 
   await Booking.bulkCreate(bookingsData);
   console.log('✅ Bookings terverifikasi berhasil disimpan di PostgreSQL');

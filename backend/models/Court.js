@@ -78,6 +78,18 @@ export const Court = sequelize.define('Court', {
   expected_online: {
     type: DataTypes.STRING(100),
     allowNull: true
+  },
+  match_format: {
+    type: DataTypes.STRING(50),
+    defaultValue: '5-a-side'
+  },
+  surface_spec: {
+    type: DataTypes.STRING(100),
+    defaultValue: 'Outdoor Pro'
+  },
+  main_image: {
+    type: DataTypes.STRING(500),
+    allowNull: true
   }
 }, {
   tableName: 'courts'

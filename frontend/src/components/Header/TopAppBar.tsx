@@ -125,20 +125,13 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
               <span>Admin Console</span>
             </Link>
 
-            <button
-              onClick={() => {
-                if (user?.role === 'owner' || user?.role === 'admin') {
-                  alert(`Dashboard Pengelola Venue aktif untuk ${user.name}`);
-                } else {
-                  setAuthMode('register');
-                  setIsAuthModalOpen(true);
-                }
-              }}
+            <Link
+              href="/owner"
               className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-brand-800 px-3 py-2 rounded-lg hover:bg-brand-50 transition cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4 text-brand-600" />
-              <span>Daftarkan Venue</span>
-            </button>
+              <span>Owner Dashboard</span>
+            </Link>
 
             <button
               onClick={onOpenBookingHistory || (() => alert("Membuka riwayat booking terverifikasi Anda"))}

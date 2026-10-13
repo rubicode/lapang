@@ -112,6 +112,26 @@ export const Venue = sequelize.define('Venue', {
   sport_type: {
     type: DataTypes.STRING(100),
     allowNull: true
+  },
+  district: {
+    type: DataTypes.STRING(150),
+    defaultValue: 'Downtown Sports District'
+  },
+  unique_visitors_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 3842
+  },
+  currency: {
+    type: DataTypes.STRING(10),
+    defaultValue: 'USD'
+  },
+  early_bird_promo_active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  early_bird_discount_percent: {
+    type: DataTypes.INTEGER,
+    defaultValue: 20
   }
 }, {
   tableName: 'venues'

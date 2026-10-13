@@ -20,6 +20,8 @@ export default function LoginPage() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('error') === 'unauthorized') {
         setErrorMessage('Akses ditolak. Anda harus login dengan akun Administrator untuk membuka Admin Dashboard.');
+      } else if (params.get('error') === 'unauthorized_owner') {
+        setErrorMessage('Akses ditolak. Anda harus login dengan akun Pemilik Lapangan (Owner) untuk membuka Pitch Gallery Dashboard.');
       }
     }
   }, []);
@@ -36,8 +38,16 @@ export default function LoginPage() {
         localStorage.setItem('lapang_user', JSON.stringify(result.user));
       }
       alert(`Selamat datang kembali, ${result.user.name}!`);
-      if (result.user.role === 'admin') {
+
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const returnUrl = params?.get('returnUrl');
+
+      if (returnUrl) {
+        router.push(returnUrl);
+      } else if (result.user.role === 'admin') {
         router.push('/admin');
+      } else if (result.user.role === 'owner') {
+        router.push('/owner');
       } else {
         router.push('/');
       }
@@ -61,8 +71,16 @@ export default function LoginPage() {
         localStorage.setItem('lapang_user', JSON.stringify(result.user));
       }
       alert(`Login berhasil sebagai: ${result.user.name} (${result.user.role.toUpperCase()})`);
-      if (result.user.role === 'admin') {
+
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const returnUrl = params?.get('returnUrl');
+
+      if (returnUrl) {
+        router.push(returnUrl);
+      } else if (result.user.role === 'admin') {
         router.push('/admin');
+      } else if (result.user.role === 'owner') {
+        router.push('/owner');
       } else {
         router.push('/');
       }
@@ -132,10 +150,10 @@ export default function LoginPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleQuickPreset('owner@lapang.id')}
-                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 rounded-lg text-amber-200 text-[10px] font-bold transition"
+                  onClick={() => handleQuickPreset('marcus@lapang.id')}
+                  className="px-2.5 py-1 bg-amber-500/30 hover:bg-amber-500/40 border border-amber-400/50 rounded-lg text-amber-200 text-[10px] font-bold transition"
                 >
-                  Pengelola (Owner)
+                  Marcus Silva (Owner)
                 </button>
                 <button
                   type="button"

@@ -7,7 +7,12 @@ import {
   AuthUser,
   AdminOverviewResponse,
   AdminApplicationStatus,
-  VerificationApplicant
+  VerificationApplicant,
+  OwnerOverviewResponse,
+  OwnerBookingsResponse,
+  OwnerScheduleResponse,
+  OwnerRevenueResponse,
+  OwnerSettingsResponse
 } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1';
@@ -620,4 +625,302 @@ export function downloadVerificationCsv(applications: VerificationApplicant[]) {
   link.click();
   document.body.removeChild(link);
 }
+
+/**
+ * 14. Ambil Data Ikhtisar Owner Dashboard (Pitch Gallery) langsung dari PostgreSQL
+ */
+export async function fetchOwnerOverview(token?: string | null): Promise<OwnerOverviewResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/overview`, {
+    headers: getHeaders(authToken),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP error ${res.status}: Gagal memuat data owner dashboard dari database.`);
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 15. Tambah Lapangan Baru Milik Owner (Disimpan langsung ke PostgreSQL)
+ */
+export async function createOwnerCourtApi(
+  payload: {
+    name: string;
+    match_format?: string;
+    surface_spec?: string;
+    price_hourly: number;
+    court_type?: string;
+    main_image?: string;
+  },
+  token?: string | null
+): Promise<boolean> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  try {
+    const res = await fetch(`${API_BASE_URL}/owner/fields`, {
+      method: 'POST',
+      headers: getHeaders(authToken),
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Gagal menambahkan court:', err);
+    return false;
+  }
+}
+
+/**
+ * 16. Update Lapangan Milik Owner (Disimpan langsung ke PostgreSQL)
+ */
+export async function updateOwnerCourtApi(
+  courtId: string,
+  payload: {
+    name?: string;
+    price_hourly?: number;
+    is_active?: boolean;
+    match_format?: string;
+    surface_spec?: string;
+    main_image?: string;
+  },
+  token?: string | null
+): Promise<boolean> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  try {
+    const res = await fetch(`${API_BASE_URL}/owner/fields/${courtId}`, {
+      method: 'PATCH',
+      headers: getHeaders(authToken),
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Gagal memperbarui court:', err);
+    return false;
+  }
+}
+
+/**
+ * 17. Toggle Early Bird Promotion di PostgreSQL
+ */
+export async function toggleOwnerEarlyBirdPromoApi(
+  promoActive: boolean,
+  token?: string | null
+): Promise<{ earlyBirdPromoActive: boolean; discountPercent: number }> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/promotions/early-bird`, {
+    method: 'POST',
+    headers: getHeaders(authToken),
+    body: JSON.stringify({ promoActive })
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal memperbarui status promosi.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 18. Unduh Owner Management CSV Report
+ */
+export async function downloadOwnerReportApi(token?: string | null) {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/export-report`, {
+    headers: getHeaders(authToken)
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal mengunduh laporan owner.');
+  }
+
+  const csvText = await res.text();
+  const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pitch-gallery-owner-report-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+/**
+ * 19. Ambil Data Bookings Owner Lengkap Langsung dari PostgreSQL
+ */
+export async function fetchOwnerBookingsApi(
+  params: { status?: string; search?: string; courtId?: string; page?: number; limit?: number } = {},
+  token?: string | null
+): Promise<OwnerBookingsResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const query = new URLSearchParams();
+  if (params.status) query.append('status', params.status);
+  if (params.search) query.append('search', params.search);
+  if (params.courtId) query.append('courtId', params.courtId);
+  if (params.page) query.append('page', String(params.page));
+  if (params.limit) query.append('limit', String(params.limit));
+
+  const res = await fetch(`${API_BASE_URL}/owner/bookings?${query.toString()}`, {
+    headers: getHeaders(authToken),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal memuat data booking dari server.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 20. Update Status Booking di PostgreSQL (Confirm, Cancel, Complete)
+ */
+export async function updateOwnerBookingStatusApi(
+  bookingId: string,
+  status: string,
+  token?: string | null
+): Promise<boolean> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/bookings/${bookingId}/status`, {
+    method: 'PATCH',
+    headers: getHeaders(authToken),
+    body: JSON.stringify({ status })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Gagal mengubah status pemesanan.');
+  }
+
+  return true;
+}
+
+/**
+ * 21. Ambil Data Jadwal Slot Waktu (Schedule) Langsung dari PostgreSQL
+ */
+export async function fetchOwnerSchedulesApi(
+  courtId?: string,
+  date?: string,
+  token?: string | null
+): Promise<OwnerScheduleResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const query = new URLSearchParams();
+  if (courtId) query.append('courtId', courtId);
+  if (date) query.append('date', date);
+
+  const res = await fetch(`${API_BASE_URL}/owner/schedules?${query.toString()}`, {
+    headers: getHeaders(authToken),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal memuat data jadwal dari server.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 22. Toggle Block / Unblock Slot Waktu di PostgreSQL
+ */
+export async function toggleOwnerScheduleBlockApi(
+  payload: { courtId: string; date: string; timeSlot: string; status: 'blocked' | 'available' },
+  token?: string | null
+): Promise<boolean> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/schedules/toggle-block`, {
+    method: 'POST',
+    headers: getHeaders(authToken),
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Gagal memperbarui status slot.');
+  }
+
+  return true;
+}
+
+/**
+ * 23. Ambil Data Revenue & Breakdown Finansial dari PostgreSQL
+ */
+export async function fetchOwnerRevenueApi(
+  period: string = 'month',
+  token?: string | null
+): Promise<OwnerRevenueResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/revenue?period=${period}`, {
+    headers: getHeaders(authToken),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal memuat data finansial dari server.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 24. Ambil Pengaturan Venue & Akun Pemilik dari PostgreSQL
+ */
+export async function fetchOwnerSettingsApi(
+  token?: string | null
+): Promise<OwnerSettingsResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/settings`, {
+    headers: getHeaders(authToken),
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('Gagal memuat pengaturan dari server.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
+/**
+ * 25. Perbarui Pengaturan Venue & Akun Pemilik ke PostgreSQL
+ */
+export async function updateOwnerSettingsApi(
+  payload: Partial<{
+    ownerName: string;
+    ownerPhone: string;
+    venueName: string;
+    district: string;
+    address: string;
+    phoneNumber: string;
+    openingHours: string;
+    currency: string;
+    earlyBirdPromoActive: boolean;
+    earlyBirdDiscountPercent: number;
+    description: string;
+  }>,
+  token?: string | null
+): Promise<OwnerSettingsResponse> {
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('lapang_token') : null);
+  const res = await fetch(`${API_BASE_URL}/owner/settings`, {
+    method: 'PATCH',
+    headers: getHeaders(authToken),
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'Gagal memperbarui pengaturan.');
+  }
+
+  const json = await res.json();
+  return json.data;
+}
+
 
