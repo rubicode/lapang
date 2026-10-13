@@ -38,6 +38,46 @@ export const Court = sequelize.define('Court', {
   is_active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  monitoring_status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'LIVE'
+  },
+  occupancy_rate: {
+    type: DataTypes.INTEGER,
+    defaultValue: 60
+  },
+  active_players_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 8
+  },
+  current_match: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  lighting_telemetry: {
+    type: DataTypes.STRING(100),
+    defaultValue: 'Active (1000 Lux)'
+  },
+  temperature_telemetry: {
+    type: DataTypes.STRING(50),
+    defaultValue: '24°C'
+  },
+  pitch_health_telemetry: {
+    type: DataTypes.STRING(100),
+    defaultValue: 'Optimal (Moisture 22%)'
+  },
+  time_remaining: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  maintenance_task: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  expected_online: {
+    type: DataTypes.STRING(100),
+    allowNull: true
   }
 }, {
   tableName: 'courts'

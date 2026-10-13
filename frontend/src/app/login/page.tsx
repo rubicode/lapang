@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Compass, Mail, Lock, Eye, EyeOff, X } from 'lucide-react';
 import Link from 'next/link';
@@ -15,6 +15,15 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('error') === 'unauthorized') {
+        setErrorMessage('Akses ditolak. Anda harus login dengan akun Administrator untuk membuka Admin Dashboard.');
+      }
+    }
+  }, []);
+
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
@@ -22,8 +31,16 @@ export default function LoginPage() {
 
     try {
       const result = await loginUser(email, password);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lapang_token', result.token);
+        localStorage.setItem('lapang_user', JSON.stringify(result.user));
+      }
       alert(`Selamat datang kembali, ${result.user.name}!`);
-      router.push('/');
+      if (result.user.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       setErrorMessage(err.message || 'Login gagal.');
     } finally {
@@ -39,8 +56,16 @@ export default function LoginPage() {
 
     try {
       const result = await loginUser(presetEmail, 'Password123!');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lapang_token', result.token);
+        localStorage.setItem('lapang_user', JSON.stringify(result.user));
+      }
       alert(`Login berhasil sebagai: ${result.user.name} (${result.user.role.toUpperCase()})`);
-      router.push('/');
+      if (result.user.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       setErrorMessage(err.message);
     } finally {

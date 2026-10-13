@@ -88,6 +88,30 @@ export const Venue = sequelize.define('Venue', {
   is_verified: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  verification_status: {
+    type: DataTypes.STRING(50),
+    defaultValue: 'Verified'
+  },
+  verification_submitted_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  verification_documents: {
+    type: DataTypes.JSONB,
+    defaultValue: []
+  },
+  verification_notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  verification_issue_note: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  sport_type: {
+    type: DataTypes.STRING(100),
+    allowNull: true
   }
 }, {
   tableName: 'venues'

@@ -51,3 +51,9 @@ body {
 .custom-pin:hover {
   transform: scale(1.15) translateY(-4px);
 }
+
+/* Sembunyikan Next.js dev overlay indicator agar avatar sidebar terlihat bersih */
+nextjs-portal {
+  display: none !important;
+}
+

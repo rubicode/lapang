@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Compass, Search, Crosshair, ShieldCheck, Calendar, KeyRound, LogOut } from 'lucide-react';
+import Link from 'next/link';
+import { Compass, Search, Crosshair, ShieldCheck, Calendar, KeyRound, LogOut, LayoutDashboard } from 'lucide-react';
 import { AuthUser } from '@/types';
 import { AuthModal } from '@/components/Auth/AuthModal';
 
@@ -115,6 +116,15 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
 
           {/* User Nav Actions */}
           <div className="flex items-center gap-2 lg:gap-3">
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 bg-emerald-100/90 hover:bg-emerald-200/90 px-3 py-1.5 rounded-xl transition border border-emerald-300/60 shadow-2xs cursor-pointer"
+              title="Buka Admin Console (Pitch Gallery Management)"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5 text-emerald-800" />
+              <span>Admin Console</span>
+            </Link>
+
             <button
               onClick={() => {
                 if (user?.role === 'owner' || user?.role === 'admin') {

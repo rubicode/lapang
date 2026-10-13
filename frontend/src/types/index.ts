@@ -89,3 +89,87 @@ export interface SpecificationFilterState {
     canteen: boolean;
   };
 }
+
+export type AdminApplicationStatus = 'Pending Review' | 'Verified' | 'Action Required' | 'Rejected';
+
+export interface VerificationDocument {
+  name: string;
+  size: string;
+  type: string;
+}
+
+export interface VerificationApplicant {
+  id: string;
+  user: {
+    name: string;
+    email: string;
+    initials?: string;
+    initialsBg?: string;
+    initialsColor?: string;
+    phone?: string;
+    avatarUrl?: string | null;
+  };
+  facilityName: string;
+  submittedDate: string;
+  status: AdminApplicationStatus;
+  sportType?: string;
+  location?: string;
+  courtsCount?: number;
+  documents?: VerificationDocument[];
+  photos?: string[];
+  issues?: string[];
+  notes?: string;
+}
+
+export interface ActiveFieldMonitoringItem {
+  id: string;
+  name: string;
+  location: string;
+  status: 'LIVE' | 'MAINTENANCE';
+  badgeType: 'live' | 'maintenance';
+  occupancyRate?: number;
+  occupancyFormatted?: string;
+  subText?: string;
+  occupancyStatus?: string;
+  activePlayersCount?: number;
+  avatars?: string[];
+  extraAvatarsCount?: number;
+  image: string;
+  currentMatch?: string;
+  lighting?: string;
+  temperature?: string;
+  pitchHealth?: string;
+  timeRemaining?: string;
+  maintenanceTask?: string;
+  technician?: string;
+  expectedOnline?: string;
+}
+
+export interface AdminStats {
+  totalUsers: number;
+  totalUsersFormatted: string;
+  totalUsersGrowth: string;
+  totalOwners: number;
+  totalOwnersFormatted: string;
+  totalOwnersGrowth: string;
+  activeBookings: number;
+  activeBookingsFormatted: string;
+  activeBookingsBadge: string;
+  monthlyRevenue: number;
+  monthlyRevenueFormatted: string;
+  currency: string;
+}
+
+export interface AdminOverviewResponse {
+  stats: AdminStats;
+  verificationQueue: VerificationApplicant[];
+  totalPendingApplications: number;
+  activeFields: ActiveFieldMonitoringItem[];
+  currentAdmin: {
+    name: string;
+    role: string;
+    email: string;
+    avatarUrl?: string;
+  };
+}
+

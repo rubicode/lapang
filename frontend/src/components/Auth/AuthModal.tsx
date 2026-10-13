@@ -53,6 +53,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     try {
       if (mode === 'login') {
         const result = await loginUser(email, password);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('lapang_token', result.token);
+          localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        }
         if (onSuccess) onSuccess(result.user);
         onClose();
         alert(`Selamat datang kembali, ${result.user.name}!`);
@@ -64,6 +68,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           phone: phone || undefined,
           role
         });
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('lapang_token', result.token);
+          localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        }
         if (onSuccess) onSuccess(result.user);
         onClose();
         alert(`Pendaftaran berhasil! Akun ${result.user.name} (${result.user.role === 'owner' ? 'Pengelola Venue' : 'Pemain'}) telah aktif.`);

@@ -26,7 +26,7 @@ export const VenueCatalogList: React.FC<VenueCatalogListProps> = ({
   onResetFilters
 }) => {
   return (
-    <section className="w-full md:w-[48%] lg:w-[42%] xl:w-[38%] h-full flex flex-col bg-white border-r border-gray-200 z-10 shrink-0">
+    <div className="w-full h-full flex flex-col min-w-0">
       {/* List Header with Stats & Sort */}
       <div className="p-4 border-b border-gray-100 bg-white flex items-center justify-between shrink-0">
         <div>
@@ -118,6 +118,9 @@ export const VenueCatalogList: React.FC<VenueCatalogListProps> = ({
                     alt={venue.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80';
+                    }}
                   />
                   <span className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-bold rounded-md flex items-center gap-1">
                     ★ {venue.rating}
@@ -125,14 +128,14 @@ export const VenueCatalogList: React.FC<VenueCatalogListProps> = ({
                 </div>
 
                 {/* Content Info */}
-                <div className="flex-1 flex flex-col justify-between">
+                <div className="flex-1 flex flex-col justify-between min-w-0">
                   <div>
                     <div className="flex items-center justify-between gap-1">
-                      <span className="text-[11px] font-bold text-brand-800 bg-brand-50 px-2 py-0.5 rounded-md flex items-center gap-1">
+                      <span className="text-[11px] font-bold text-brand-800 bg-brand-50 px-2 py-0.5 rounded-md flex items-center gap-1 shrink-0">
                         <span>{venue.sportIcon}</span>
                         <span>{venue.sportName}</span>
                       </span>
-                      <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
+                      <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1 shrink-0">
                         <MapPin className="w-3 h-3 text-slate-400" />
                         {venue.distance || `${venue.distanceKm} km`}
                       </span>
@@ -155,15 +158,15 @@ export const VenueCatalogList: React.FC<VenueCatalogListProps> = ({
                   </div>
 
                   {/* Price & CTA */}
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
-                    <div>
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-2 gap-2">
+                    <div className="shrink-0">
                       <span className="text-[10px] text-slate-400 block font-medium">Mulai dari</span>
                       <span className="text-sm font-extrabold text-brand-800">
                         {venue.priceFormatted}
                         <span className="text-[11px] font-normal text-slate-500">/jam</span>
                       </span>
                     </div>
-                    <button className="px-3.5 py-1.5 bg-brand-800 text-white text-xs font-bold rounded-xl shadow-xs group-hover:bg-brand-900 transition flex items-center gap-1">
+                    <button className="px-3.5 py-1.5 bg-brand-800 text-white text-xs font-bold rounded-xl shadow-xs group-hover:bg-brand-900 transition flex items-center gap-1 shrink-0">
                       <span>Lihat Jadwal</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
@@ -174,6 +177,6 @@ export const VenueCatalogList: React.FC<VenueCatalogListProps> = ({
           ))
         )}
       </div>
-    </section>
+    </div>
   );
 };

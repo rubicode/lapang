@@ -2,6 +2,7 @@ import express from 'express';
 import { VenueController } from '../controllers/venueController.js';
 import { BookingController, MediaController } from '../controllers/bookingAndMediaController.js';
 import { AuthController } from '../controllers/authController.js';
+import { AdminController } from '../controllers/adminController.js';
 import { upload, authenticate, optionalAuth, authorize } from '../middlewares/index.js';
 import { USER_ROLES } from '../constants/index.js';
 
@@ -43,5 +44,12 @@ router.get('/bookings/:code', BookingController.getByCode);
 
 // 8. Media Upload ke MinIO (Magic bytes check & Sharp WebP)
 router.post('/media/upload', upload.single('image'), MediaController.upload);
+
+// 9. Admin Management Dashboard (Terlindungi RBAC Khusus Admin)
+router.get('/admin/overview', authenticate, authorize(USER_ROLES.ADMIN), AdminController.getOverview);
+router.put('/admin/verifications/:id/status', authenticate, authorize(USER_ROLES.ADMIN), AdminController.updateStatus);
+router.post('/admin/invite-owner', authenticate, authorize(USER_ROLES.ADMIN), AdminController.inviteOwner);
+router.get('/admin/export-csv', authenticate, authorize(USER_ROLES.ADMIN), AdminController.exportCsv);
+router.post('/admin/reset', optionalAuth, AdminController.reset);
 
 export default router;

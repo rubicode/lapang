@@ -9,9 +9,10 @@ import {
   Court,
   VenueAmenity,
   Review,
-  CourtSchedule
+  CourtSchedule,
+  Booking
 } from '../models/index.js';
-import { USER_ROLES, SCHEDULE_STATUS } from '../constants/index.js';
+import { USER_ROLES, SCHEDULE_STATUS, BOOKING_STATUS, PAYMENT_STATUS } from '../constants/index.js';
 
 export async function runFullSeed() {
   console.log('🌱 [Seeder] Memulai seeding data nyata ke PostgreSQL (lapang_db)...');
@@ -22,7 +23,15 @@ export async function runFullSeed() {
   // 1. Seed Users (RBAC: User, Owner, Admin)
   const passwordHash = await bcrypt.hash('Password123!', 10);
 
-  const [playerUser, ownerUser, adminUser] = await Promise.all([
+  const [
+    playerUser,
+    ownerUser,
+    adminUser,
+    marcoUser,
+    sarahUser,
+    robertUser,
+    davidUser
+  ] = await Promise.all([
     User.create({
       id: '10000000-0000-0000-0000-000000000001',
       name: 'Rian Pratama',
@@ -45,20 +54,60 @@ export async function runFullSeed() {
     }),
     User.create({
       id: '10000000-0000-0000-0000-000000000003',
-      name: 'Super Admin Lapang.id',
+      name: 'Alex Thompson',
       email: 'admin@lapang.id',
       phone: '08111222333',
       password_hash: passwordHash,
       role: USER_ROLES.ADMIN,
       avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
       is_verified_player: true
+    }),
+    User.create({
+      id: '10000000-0000-0000-0000-000000000004',
+      name: 'Marco Arantes',
+      email: 'marco.a@fieldhub.pt',
+      phone: '+351 912 345 678',
+      password_hash: passwordHash,
+      role: USER_ROLES.OWNER,
+      avatar_url: null,
+      is_verified_player: false
+    }),
+    User.create({
+      id: '10000000-0000-0000-0000-000000000005',
+      name: 'Sarah Jenkins',
+      email: 's.jenkins@sportslink.com',
+      phone: '+44 20 7946 0912',
+      password_hash: passwordHash,
+      role: USER_ROLES.OWNER,
+      avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80',
+      is_verified_player: true
+    }),
+    User.create({
+      id: '10000000-0000-0000-0000-000000000006',
+      name: 'Robert Kagawa',
+      email: 'r.kagawa@kyotosoccer.jp',
+      phone: '+81 75 321 8844',
+      password_hash: passwordHash,
+      role: USER_ROLES.OWNER,
+      avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80',
+      is_verified_player: false
+    }),
+    User.create({
+      id: '10000000-0000-0000-0000-000000000007',
+      name: 'David Chen',
+      email: 'd.chen@shanghaisports.cn',
+      phone: '+86 21 6234 5678',
+      password_hash: passwordHash,
+      role: USER_ROLES.OWNER,
+      avatar_url: null,
+      is_verified_player: true
     })
   ]);
 
-  console.log('✅ Users seeded (3 akun: user, owner, admin)');
+  console.log('✅ Users seeded (Pemain, Pemilik Fasilitas, & Global Admin Alex Thompson)');
 
   // 2. Seed Sports Categories
-  const categories = await SportsCategory.bulkCreate([
+  await SportsCategory.bulkCreate([
     { id: 'futsal', name: 'Futsal & Mini Soccer', icon: '⚽', color_hex: '#1B5E20' },
     { id: 'badminton', name: 'Badminton', icon: '🏸', color_hex: '#f59e0b' },
     { id: 'basketball', name: 'Basket (Full/3x3)', icon: '🏀', color_hex: '#ea580c' },
@@ -74,7 +123,8 @@ export async function runFullSeed() {
     { id: 3, name: 'Jawa Timur' },
     { id: 4, name: 'Bali' },
     { id: 5, name: 'Sumatera Utara' },
-    { id: 6, name: 'Sulawesi Selatan' }
+    { id: 6, name: 'Sulawesi Selatan' },
+    { id: 7, name: 'International Venues' }
   ]);
 
   await City.bulkCreate([
@@ -83,12 +133,150 @@ export async function runFullSeed() {
     { id: 3, province_id: 3, name: 'Surabaya', latitude: -7.2575, longitude: 112.7521 },
     { id: 4, province_id: 4, name: 'Denpasar', latitude: -8.6705, longitude: 115.2126 },
     { id: 5, province_id: 5, name: 'Medan', latitude: 3.5952, longitude: 98.6722 },
-    { id: 6, province_id: 6, name: 'Makassar', latitude: -5.1477, longitude: 119.4327 }
+    { id: 6, province_id: 6, name: 'Makassar', latitude: -5.1477, longitude: 119.4327 },
+    { id: 7, province_id: 7, name: 'Lisbon, Portugal', latitude: 38.7223, longitude: -9.1393 },
+    { id: 8, province_id: 7, name: 'Manchester, UK', latitude: 53.4808, longitude: -2.2426 },
+    { id: 9, province_id: 7, name: 'Kyoto, Japan', latitude: 35.0116, longitude: 135.7681 },
+    { id: 10, province_id: 7, name: 'Shanghai, China', latitude: 31.2304, longitude: 121.4737 }
   ]);
   console.log('✅ Provinces & Cities seeded');
 
-  // 4. Seed 6 Venues (Persis dengan mockup/code.html)
+  // 4. Seed Venues
   const venuesData = [
+    // --- Mockup Verification Queue Applications ---
+    {
+      id: '11110000-0000-0000-0000-000000000001',
+      owner_id: marcoUser.id,
+      city_id: 7,
+      name: 'Arena Lisbon Pro',
+      slug: 'arena-lisbon-pro',
+      city_name: 'Lisbon',
+      province_name: 'Portugal',
+      address: 'Rua das Flores 120, 1200-195 Lisboa',
+      latitude: 38.7223,
+      longitude: -9.1393,
+      phone_number: '+351 912 345 678',
+      opening_hours: '08:00 - 23:00 CET',
+      floor_type: 'Futsal & Padel Interlock',
+      court_type: 'Indoor Hall',
+      base_price_hourly: 180000,
+      main_image_url: 'https://images.unsplash.com/photo-1529900245534-47fbf5de828a?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [
+        'https://images.unsplash.com/photo-1529900245534-47fbf5de828a?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'
+      ],
+      description: 'Aplikasi baru fasilitas olahraga futsal & padel indoor dengan 4 lapangan.',
+      rating_avg: 5.0,
+      review_count: 0,
+      is_verified: false,
+      verification_status: 'Pending Review',
+      verification_submitted_at: new Date('2023-10-24T10:00:00Z'),
+      sport_type: 'Futsal & Padel',
+      verification_documents: [
+        { name: 'Commercial_Registration_Lisbon.pdf', size: '2.4 MB', type: 'PDF' },
+        { name: 'Safety_Inspection_Certificate.pdf', size: '1.1 MB', type: 'PDF' }
+      ],
+      verification_notes: 'Aplikasi baru fasilitas olahraga futsal & padel indoor dengan 4 lapangan.'
+    },
+    {
+      id: '11110000-0000-0000-0000-000000000002',
+      owner_id: sarahUser.id,
+      city_id: 8,
+      name: 'Jenkins Multisport',
+      slug: 'jenkins-multisport',
+      city_name: 'Manchester',
+      province_name: 'UK',
+      address: '42 Oxford Road, Manchester M1 5QA',
+      latitude: 53.4808,
+      longitude: -2.2426,
+      phone_number: '+44 20 7946 0912',
+      opening_hours: '06:30 - 22:30 GMT',
+      floor_type: 'Badminton & Squash Hardwood',
+      court_type: 'Indoor Hall',
+      base_price_hourly: 150000,
+      main_image_url: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [
+        'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80'
+      ],
+      description: 'Pusat olahraga bulu tangkis dan squash modern di pusat kota Manchester.',
+      rating_avg: 4.9,
+      review_count: 32,
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-10-22T09:30:00Z'),
+      sport_type: 'Badminton & Squash',
+      verification_documents: [
+        { name: 'UK_Sports_Council_Approval.pdf', size: '3.1 MB', type: 'PDF' }
+      ],
+      verification_notes: 'Terverifikasi penuh oleh tim audit kepatuhan fasilitas.'
+    },
+    {
+      id: '11110000-0000-0000-0000-000000000003',
+      owner_id: robertUser.id,
+      city_id: 9,
+      name: 'Kyoto Soccer Park',
+      slug: 'kyoto-soccer-park',
+      city_name: 'Kyoto',
+      province_name: 'Japan',
+      address: '15 Karasuma-dori, Shimogyo-ku, Kyoto 600-8216',
+      latitude: 35.0116,
+      longitude: 135.7681,
+      phone_number: '+81 75 321 8844',
+      opening_hours: '07:00 - 23:00 JST',
+      floor_type: 'Synthetic Turf 5G',
+      court_type: 'Outdoor Arena',
+      base_price_hourly: 190000,
+      main_image_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [
+        'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'
+      ],
+      description: 'Arena mini soccer outdoor di Kyoto dengan pemandangan pegunungan timur.',
+      rating_avg: 4.8,
+      review_count: 14,
+      is_verified: false,
+      verification_status: 'Action Required',
+      verification_submitted_at: new Date('2023-10-20T14:15:00Z'),
+      sport_type: 'Futsal Turf',
+      verification_documents: [
+        { name: 'Kyoto_Municipal_Application.pdf', size: '1.8 MB', type: 'PDF' }
+      ],
+      verification_issue_note: 'Perpanjangan Sertifikat Kelaikan Pemadam Kebakaran & Bukti IMB Olahraga Komersial belum lengkap.',
+      verification_notes: 'Menunggu kelengkapan berkas izin keselamatan pemadam kebakaran.'
+    },
+    {
+      id: '11110000-0000-0000-0000-000000000004',
+      owner_id: davidUser.id,
+      city_id: 10,
+      name: 'Victory Stadium Shanghai',
+      slug: 'victory-stadium-shanghai',
+      city_name: 'Shanghai',
+      province_name: 'China',
+      address: '888 Pudong South Rd, Lujiazui, Pudong, Shanghai',
+      latitude: 31.2304,
+      longitude: 121.4737,
+      phone_number: '+86 21 6234 5678',
+      opening_hours: '06:00 - 24:00 CST',
+      floor_type: 'Hardwood FIBA & Acrylic Tennis',
+      court_type: 'Multi-Level Complex',
+      base_price_hourly: 250000,
+      main_image_url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [
+        'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80'
+      ],
+      description: 'Kompleks olahraga multifungsi elit di kawasan finansial Shanghai.',
+      rating_avg: 4.95,
+      review_count: 65,
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-10-19T11:00:00Z'),
+      sport_type: 'Basketball & Tennis',
+      verification_documents: [
+        { name: 'Shanghai_Sports_Bureau_Permit.pdf', size: '4.0 MB', type: 'PDF' }
+      ],
+      verification_notes: 'Dokumen lengkap dan fasilitas telah disurvei langsung oleh tim pengawas.'
+    },
+
+    // --- Indonesian Venues ---
     {
       id: '11111111-1111-1111-1111-111111111111',
       owner_id: ownerUser.id,
@@ -105,7 +293,7 @@ export async function runFullSeed() {
       floor_type: 'Rumput Sintetis Monofilament FIFA Standard',
       court_type: 'Semi-Indoor',
       base_price_hourly: 175000,
-      main_image_url: 'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
+      main_image_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
       gallery_images: [
         'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=500&q=80',
@@ -114,7 +302,10 @@ export async function runFullSeed() {
       description: 'Venue mini soccer dan futsal premium dengan rumput sintetis standar internasional. Dilengkapi lampu floodlight 500 lux untuk pertandingan malam hari, ruang ganti ber-AC, dan shower air panas.',
       rating_avg: 4.9,
       review_count: 142,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-09-15T08:00:00Z'),
+      sport_type: 'Futsal & Mini Soccer'
     },
     {
       id: '22222222-2222-2222-2222-222222222222',
@@ -140,7 +331,10 @@ export async function runFullSeed() {
       description: 'Pusat bulu tangkis terlengkap di Bandung dengan 6 lapangan karpet vinyl standar kejuaraan BWF. Sirkulasi udara sejuk pegunungan dan kantin dengan menu sehat.',
       rating_avg: 4.8,
       review_count: 96,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-09-20T10:00:00Z'),
+      sport_type: 'Badminton'
     },
     {
       id: '33333333-3333-3333-3333-333333333333',
@@ -166,7 +360,10 @@ export async function runFullSeed() {
       description: 'Fasilitas Padel Tennis standar turnamen di pinggir pantai Sanur. Nikmati semilir angin laut dan kafe sehat setelah sesi latihan atau sparring.',
       rating_avg: 4.9,
       review_count: 210,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-09-25T11:30:00Z'),
+      sport_type: 'Tenis & Padel'
     },
     {
       id: '44444444-4444-4444-4444-444444444444',
@@ -192,7 +389,10 @@ export async function runFullSeed() {
       description: 'Lapangan basket rooftop dengan pemandangan cakrawala kota Surabaya barat. Lantai interlock empuk anti-selip dan ring hidrolik bersertifikasi FIBA.',
       rating_avg: 4.7,
       review_count: 78,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-10-01T15:00:00Z'),
+      sport_type: 'Basket (Full/3x3)'
     },
     {
       id: '55555555-5555-5555-5555-555555555555',
@@ -217,7 +417,10 @@ export async function runFullSeed() {
       description: 'Pusat olahraga keluarga di Jakarta Selatan dengan 4 lapangan futsal vinyl dan 3 lapangan bulu tangkis berlantai parket kayu jati.',
       rating_avg: 4.85,
       review_count: 114,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-10-05T12:00:00Z'),
+      sport_type: 'Futsal & Mini Soccer'
     },
     {
       id: '66666666-6666-6666-6666-666666666666',
@@ -242,49 +445,84 @@ export async function runFullSeed() {
       description: 'Hub olahraga populer di pusat kota Bandung untuk bola voli dan mini soccer. Dilengkapi sound system untuk turnamen dan tribun penonton nyaman.',
       rating_avg: 4.65,
       review_count: 62,
-      is_verified: true
+      is_verified: true,
+      verification_status: 'Verified',
+      verification_submitted_at: new Date('2023-10-10T16:00:00Z'),
+      sport_type: 'Bola Voli'
     }
   ];
 
   for (const v of venuesData) {
     await Venue.create(v);
   }
-  console.log('✅ 6 Venues seeded ke PostgreSQL');
+  console.log(`✅ ${venuesData.length} Venues seeded ke PostgreSQL (termasuk antrean verifikasi & arena nasional)`);
 
-  // 5. Seed Sub-Courts
+  // 5. Seed Sub-Courts (Dengan Data IoT Field Monitoring Sesuai Mockup)
   const courtsData = [
     {
       id: 'aaaa1111-1111-1111-1111-111111111111',
       venue_id: '11111111-1111-1111-1111-111111111111',
       category_id: 'futsal',
-      name: 'Lapangan Mini Soccer Utama (Sintetis)',
-      floor_type: 'Rumput Sintetis FIFA',
+      name: 'Stamford Bridge Turf A',
+      floor_type: 'Rumput Sintetis Monofilament FIFA',
       court_type: 'semi_indoor',
       price_hourly: 175000,
-      images: ['https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      images: [
+        'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 60,
+      active_players_count: 8,
+      current_match: 'Chelsea Academy Youth vs Fulham U19',
+      lighting_telemetry: 'Active (1000 Lux)',
+      temperature_telemetry: '18°C',
+      pitch_health_telemetry: 'Optimal (Moisture 24%)',
+      time_remaining: '38 mins remaining'
     },
     {
       id: 'bbbb2222-2222-2222-2222-222222222222',
       venue_id: '22222222-2222-2222-2222-222222222222',
       category_id: 'badminton',
-      name: 'Court 1 - Karpet Vinyl BWF',
-      floor_type: 'Vinyl BWF Approved',
+      name: 'The Indoor Hub - Field 2',
+      floor_type: 'Vinyl BWF Approved 5mm',
       court_type: 'indoor',
       price_hourly: 85000,
-      images: ['https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      images: [
+        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: false,
+      monitoring_status: 'MAINTENANCE',
+      occupancy_rate: 0,
+      active_players_count: 0,
+      maintenance_task: 'Deep Turf Grooming & Infill Replacement',
+      expected_online: 'Today, 14:00 CET',
+      temperature_telemetry: '21°C Indoor',
+      lighting_telemetry: 'Service Mode (400 Lux)'
     },
     {
       id: 'cccc3333-3333-3333-3333-333333333333',
       venue_id: '33333333-3333-3333-3333-333333333333',
       category_id: 'padel',
-      name: 'Court Sanur Padel A',
+      name: 'Sunshine Coast Arena',
       floor_type: 'Textured Silica Turf',
       court_type: 'outdoor',
       price_hourly: 220000,
-      images: ['https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      images: [
+        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80'
+      ],
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 95,
+      active_players_count: 12,
+      current_match: 'Queensland Premier League 7-a-side Tournament',
+      lighting_telemetry: 'Natural Sunlight',
+      temperature_telemetry: '26°C',
+      pitch_health_telemetry: '98% Quality Rating',
+      time_remaining: '14 mins remaining'
     },
     {
       id: 'dddd4444-4444-4444-4444-444444444444',
@@ -295,7 +533,12 @@ export async function runFullSeed() {
       court_type: 'outdoor',
       price_hourly: 150000,
       images: ['https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 80,
+      active_players_count: 6,
+      lighting_telemetry: 'LED 800 Lux',
+      temperature_telemetry: '28°C'
     },
     {
       id: 'eeee5555-5555-5555-5555-555555555555',
@@ -306,7 +549,12 @@ export async function runFullSeed() {
       court_type: 'indoor',
       price_hourly: 130000,
       images: ['https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 70,
+      active_players_count: 10,
+      lighting_telemetry: 'Indoor 600 Lux',
+      temperature_telemetry: '25°C'
     },
     {
       id: 'ffff6666-6666-6666-6666-666666666666',
@@ -317,12 +565,17 @@ export async function runFullSeed() {
       court_type: 'indoor',
       price_hourly: 110000,
       images: ['https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=800&q=80'],
-      is_active: true
+      is_active: true,
+      monitoring_status: 'LIVE',
+      occupancy_rate: 50,
+      active_players_count: 12,
+      lighting_telemetry: 'Indoor 750 Lux',
+      temperature_telemetry: '24°C'
     }
   ];
 
   await Court.bulkCreate(courtsData);
-  console.log('✅ Courts seeded untuk semua venue');
+  console.log('✅ Courts seeded lengkap dengan metrik IoT Monitoring');
 
   // 6. Seed Amenities
   const amenitiesList = [
@@ -350,7 +603,7 @@ export async function runFullSeed() {
   await VenueAmenity.bulkCreate(amenitiesList);
   console.log('✅ Venue Amenities seeded');
 
-  // 7. Seed Reviews dengan Rincian 4 Aspek & Balasan Pengelola
+  // 7. Seed Reviews
   const reviewsData = [
     {
       id: 'cccc1111-1111-1111-1111-111111111111',
@@ -417,7 +670,65 @@ export async function runFullSeed() {
   await Review.bulkCreate(reviewsData);
   console.log('✅ Reviews seeded');
 
-  // 8. Seed Court Schedules (Hari Ini & Besok untuk semua sub-court)
+  // 8. Seed Bookings (Untuk Menghasilkan Total Revenue & Active Bookings Riil di Database)
+  const bookingsData = [
+    {
+      id: 'b1111111-1111-1111-1111-111111111111',
+      booking_code: 'LAPANG-2024-ID-8849',
+      user_id: playerUser.id,
+      venue_id: '11111111-1111-1111-1111-111111111111',
+      court_id: 'aaaa1111-1111-1111-1111-111111111111',
+      venue_name: 'The Emerald Arena Jakarta',
+      customer_name: 'Bagus Hendrawan',
+      customer_phone: '081234567890',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '19:00 - 21:00',
+      total_amount: 350000,
+      payment_method: 'QRIS',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      midtrans_snap_token: 'SNAP-demo-token-001'
+    },
+    {
+      id: 'b2222222-2222-2222-2222-222222222222',
+      booking_code: 'LAPANG-2024-ID-8850',
+      user_id: playerUser.id,
+      venue_id: '22222222-2222-2222-2222-222222222222',
+      court_id: 'bbbb2222-2222-2222-2222-222222222222',
+      venue_name: 'GOR Badminton Bintang Dago',
+      customer_name: 'Dinda Kirana',
+      customer_phone: '081298765432',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '16:00 - 18:00',
+      total_amount: 170000,
+      payment_method: 'QRIS',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      midtrans_snap_token: 'SNAP-demo-token-002'
+    },
+    {
+      id: 'b3333333-3333-3333-3333-333333333333',
+      booking_code: 'LAPANG-2024-ID-8851',
+      user_id: playerUser.id,
+      venue_id: '33333333-3333-3333-3333-333333333333',
+      court_id: 'cccc3333-3333-3333-3333-333333333333',
+      venue_name: 'Sanur Padel & Tennis Club',
+      customer_name: 'Michael Tan',
+      customer_phone: '081377889900',
+      date: new Date().toISOString().split('T')[0],
+      time_slot: '08:00 - 10:00',
+      total_amount: 440000,
+      payment_method: 'QRIS',
+      payment_status: PAYMENT_STATUS.SETTLEMENT,
+      booking_status: BOOKING_STATUS.CONFIRMED,
+      midtrans_snap_token: 'SNAP-demo-token-003'
+    }
+  ];
+
+  await Booking.bulkCreate(bookingsData);
+  console.log('✅ Bookings terverifikasi berhasil disimpan di PostgreSQL');
+
+  // 9. Seed Court Schedules
   const timeSlots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
   const todayStr = new Date().toISOString().split('T')[0];
   const tomorrow = new Date();
@@ -428,7 +739,6 @@ export async function runFullSeed() {
   for (const c of courtsData) {
     for (const d of [todayStr, tomorrowStr]) {
       for (const slot of timeSlots) {
-        // Buat beberapa slot sudah terisi (booked) agar realistis
         const isBooked = (slot === '08:00' || slot === '15:00' || slot === '19:00');
         schedulesToInsert.push({
           court_id: c.id,
@@ -442,9 +752,9 @@ export async function runFullSeed() {
   }
 
   await CourtSchedule.bulkCreate(schedulesToInsert);
-  console.log(`✅ Court Schedules seeded (${schedulesToInsert.length} slot waktu untuk hari ini dan besok)`);
+  console.log(`✅ Court Schedules seeded (${schedulesToInsert.length} slot waktu)`);
 
-  console.log('🎉 [Seeder Selesai] Seluruh data master, lapangan, ulasan, dan jadwal telah terisi nyata di PostgreSQL!');
+  console.log('🎉 [Seeder Selesai] Seluruh data master, lapangan, admin, dan jadwal telah terisi nyata di PostgreSQL!');
 }
 
 // Eksekusi langsung jika dipanggil via node seeders/seed.js
