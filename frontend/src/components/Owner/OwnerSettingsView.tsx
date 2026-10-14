@@ -113,10 +113,10 @@ export const OwnerSettingsView: React.FC<OwnerSettingsViewProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-[#132A17] tracking-tight">
-            Venue & Account Settings
+            Pengaturan Fasilitas &amp; Akun
           </h2>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
-            Kelola profil fasilitas lapangan, promo Early Bird, dan kontak pengelola Pitch Gallery.
+            Kelola profil fasilitas lapangan, promo Early Bird, dan kontak pengelola fasilitas.
           </p>
         </div>
         <button
@@ -217,7 +217,7 @@ export const OwnerSettingsView: React.FC<OwnerSettingsViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Mata Uang (Currency)
+                  Mata Uang
                 </label>
                 <select
                   value={currency}
@@ -291,7 +291,7 @@ export const OwnerSettingsView: React.FC<OwnerSettingsViewProps> = ({
             <div className="flex items-center gap-2.5 border-b border-[#E5E9DF] pb-4">
               <User className="w-5 h-5 text-[#133E1E]" />
               <div>
-                <h3 className="text-base font-black text-[#132A17]">Profil Pemilik (Owner)</h3>
+                <h3 className="text-base font-black text-[#132A17]">Profil Pemilik</h3>
                 <p className="text-xs text-slate-500">Informasi identitas akun pemilik fasilitas lapangan.</p>
               </div>
             </div>

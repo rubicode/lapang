@@ -81,7 +81,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-extrabold bg-[#DCF5D8] text-[#133E1E] border border-[#BCE8B6]">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#133E1E]" />
-          Confirmed
+          Terkonfirmasi
         </span>
       );
     }
@@ -89,7 +89,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">
           <Clock className="w-3.5 h-3.5 text-amber-600" />
-          Pending
+          Menunggu
         </span>
       );
     }
@@ -97,14 +97,14 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
           <XCircle className="w-3.5 h-3.5 text-rose-500" />
-          Cancelled
+          Dibatalkan
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
         <Check className="w-3.5 h-3.5 text-blue-500" />
-        Completed
+        Selesai
       </span>
     );
   };
@@ -115,7 +115,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-[#132A17] tracking-tight">
-            Reservations & Bookings
+            Reservasi & Pemesanan
           </h2>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
             Daftar lengkap pemesanan lapangan langsung dari basis data PostgreSQL.
@@ -139,15 +139,15 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
             <p className="text-2xl font-black text-[#132A17] mt-1">{data.summary.total}</p>
           </div>
           <div className="p-4 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
-            <p className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Confirmed</p>
+            <p className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Terkonfirmasi</p>
             <p className="text-2xl font-black text-emerald-800 mt-1">{data.summary.confirmed}</p>
           </div>
           <div className="p-4 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
-            <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Pending</p>
+            <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Menunggu</p>
             <p className="text-2xl font-black text-amber-800 mt-1">{data.summary.pending}</p>
           </div>
           <div className="p-4 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
-            <p className="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Cancelled</p>
+            <p className="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Dibatalkan</p>
             <p className="text-2xl font-black text-rose-800 mt-1">{data.summary.cancelled}</p>
           </div>
           <div className="col-span-2 md:col-span-1 p-4 rounded-2xl bg-[#123E24] text-white shadow-xs">
@@ -188,10 +188,10 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
               className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer"
             >
               <option value="all">Semua Status</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="pending">Pending</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="completed">Completed</option>
+              <option value="confirmed">Terkonfirmasi</option>
+              <option value="pending">Menunggu</option>
+              <option value="cancelled">Dibatalkan</option>
+              <option value="completed">Selesai</option>
             </select>
           </div>
 
@@ -238,7 +238,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="bg-[#F8F9F5] border-b border-[#E5E9DF] text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                  <th className="py-3.5 px-4">Booking Code</th>
+                  <th className="py-3.5 px-4">Kode Booking</th>
                   <th className="py-3.5 px-4">Pelanggan</th>
                   <th className="py-3.5 px-4">Lapangan</th>
                   <th className="py-3.5 px-4">Jadwal & Waktu</th>
@@ -293,7 +293,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
                               title="Konfirmasi Pesanan"
                               className="px-2.5 py-1 rounded-lg bg-[#DCF5D8] hover:bg-[#c9eec3] text-[#133E1E] font-bold text-[11px] transition cursor-pointer"
                             >
-                              Confirm
+                              Konfirmasi
                             </button>
                           )}
                           {b.bookingStatusRaw === 'confirmed' && (
@@ -302,7 +302,7 @@ export const OwnerBookingsView: React.FC<OwnerBookingsViewProps> = ({ onShowToas
                               title="Tandai Selesai"
                               className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-[11px] transition cursor-pointer"
                             >
-                              Complete
+                              Selesai
                             </button>
                           )}
                           {b.bookingStatusRaw !== 'cancelled' && (

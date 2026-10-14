@@ -44,7 +44,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         {/* Summary Details */}
         <div className="bg-slate-50 p-4 rounded-2xl border border-gray-200 text-left text-xs space-y-2">
           <div className="flex justify-between">
-            <span className="text-slate-500">Venue:</span>
+            <span className="text-slate-500">Lapangan:</span>
             <span className="font-bold text-slate-800">{venue.name}</span>
           </div>
           <div className="flex justify-between">
@@ -57,7 +57,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <span className="px-1.5 py-0.5 bg-red-100 text-red-600 rounded font-black text-[10px]">
                 QRIS
               </span>
-              <span>Midtrans Instan Pay</span>
+              <span>Bayar Instan Midtrans</span>
             </span>
           </div>
           <div className="border-t pt-2 flex justify-between font-black text-sm text-slate-900">
@@ -76,7 +76,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             className="w-32 h-32 mx-auto rounded"
           />
           <p className="text-[10px] text-slate-400 mt-1 font-medium">
-            Scan via GoPay, OVO, BCA, Livin Mandiri, ShopeePay
+            Pindai via GoPay, OVO, BCA, Livin Mandiri, ShopeePay
           </p>
         </div>
 

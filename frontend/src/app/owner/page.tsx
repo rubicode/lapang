@@ -139,8 +139,8 @@ export default function OwnerDashboardPage() {
       });
       showToast(
         res.earlyBirdPromoActive
-          ? 'Early Bird Promotion (diskon 20%) berhasil diaktifkan di database!'
-          : 'Early Bird Promotion dinonaktifkan.'
+          ? 'Promosi Early Bird (diskon 20%) berhasil diaktifkan di database!'
+          : 'Promosi Early Bird dinonaktifkan.'
       );
     } catch (err: any) {
       alert(err.message || 'Gagal mengubah status promosi.');
@@ -162,7 +162,7 @@ export default function OwnerDashboardPage() {
       <div className="min-h-screen bg-[#FBFBF9] flex flex-col items-center justify-center p-4">
         <Loader2 className="w-8 h-8 text-[#133E1E] animate-spin mb-3" />
         <p className="text-xs font-bold text-slate-600">
-          Memeriksa izin akses Owner Dashboard...
+          Memeriksa izin akses Dasbor Pemilik...
         </p>
       </div>
     );

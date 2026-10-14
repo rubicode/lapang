@@ -21,7 +21,7 @@ export const StatCardsGrid: React.FC<StatCardsGridProps> = ({ stats }) => {
             {stats.totalUsersGrowth || '+12%'}
           </span>
         </div>
-        <p className="text-xs font-medium text-slate-500 mb-1">Total Users</p>
+        <p className="text-xs font-medium text-slate-500 mb-1">Total Pengguna</p>
         <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           {stats.totalUsersFormatted}
         </p>
@@ -37,7 +37,7 @@ export const StatCardsGrid: React.FC<StatCardsGridProps> = ({ stats }) => {
             {stats.totalOwnersGrowth || '+4%'}
           </span>
         </div>
-        <p className="text-xs font-medium text-slate-500 mb-1">Total Owners</p>
+        <p className="text-xs font-medium text-slate-500 mb-1">Total Pengelola</p>
         <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           {stats.totalOwnersFormatted}
         </p>
@@ -50,10 +50,10 @@ export const StatCardsGrid: React.FC<StatCardsGridProps> = ({ stats }) => {
             <Trophy className="w-5 h-5" />
           </div>
           <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#eaf3ea] text-[#166534]">
-            {stats.activeBookingsBadge || 'Active'}
+            {stats.activeBookingsBadge || 'Aktif'}
           </span>
         </div>
-        <p className="text-xs font-medium text-slate-500 mb-1">Active Bookings</p>
+        <p className="text-xs font-medium text-slate-500 mb-1">Reservasi Aktif</p>
         <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           {stats.activeBookingsFormatted}
         </p>
@@ -69,7 +69,7 @@ export const StatCardsGrid: React.FC<StatCardsGridProps> = ({ stats }) => {
             <TrendingUp className="w-5 h-5" />
           </div>
         </div>
-        <p className="text-xs font-medium text-emerald-200/90 mb-1">Monthly Revenue</p>
+        <p className="text-xs font-medium text-emerald-200/90 mb-1">Pendapatan Bulanan</p>
         <p className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
           {stats.monthlyRevenueFormatted}
         </p>

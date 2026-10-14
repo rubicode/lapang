@@ -35,15 +35,15 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await authenticateOwner(page, request);
     await page.goto('/owner');
 
-    // Tunggu sampai header Overview & data database muncul
-    await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
+    // Tunggu sampai header Ringkasan & data database muncul
+    await expect(page.getByRole('heading', { name: 'Ringkasan' })).toBeVisible();
 
     // Verifikasi elemen branding Pitch Gallery di sidebar
     const sidebar = page.locator('aside');
     await expect(sidebar.getByText('Pitch Gallery')).toBeVisible();
-    await expect(sidebar.getByText('Management Dashboard')).toBeVisible();
+    await expect(sidebar.getByText('Dasbor Manajemen')).toBeVisible();
     await expect(sidebar.getByText('Marcus Silva')).toBeVisible();
-    await expect(sidebar.getByText('Premium Owner')).toBeVisible();
+    await expect(sidebar.getByText('Pemilik Premium')).toBeVisible();
 
     // Verifikasi 4 Stat Cards sesuai mockup & PostgreSQL
     await expect(page.locator('text=$24,580.00')).toBeVisible();
@@ -64,23 +64,23 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await expect(page.locator('text=Sarah Hughes')).toBeVisible();
 
     // Verifikasi Peak Hours Tip Card
-    await expect(page.locator('text=Peak Hours Tip')).toBeVisible();
+    await expect(page.locator('text=Tips Jam Sibuk')).toBeVisible();
   });
 
   test('3. Interaksi Tombol Apply Promotion memperbarui status di PostgreSQL', async ({ page, request }) => {
     await authenticateOwner(page, request);
     await page.goto('/owner');
 
-    await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Ringkasan' })).toBeVisible();
 
-    // Cari tombol promosi di Peak Hours Tip card
-    const promoButton = page.locator('button:has-text("Apply Promotion"), button:has-text("Promotion Active")').first();
+    // Cari tombol promosi di Tips Jam Sibuk card
+    const promoButton = page.locator('button:has-text("Terapkan Promosi"), button:has-text("Promosi Aktif")').first();
     await expect(promoButton).toBeVisible();
     await promoButton.click();
 
     // Tunggu perubahan status pada tombol
     await page.waitForTimeout(1000);
-    const updatedButton = page.locator('button:has-text("Apply Promotion"), button:has-text("Promotion Active")').first();
+    const updatedButton = page.locator('button:has-text("Terapkan Promosi"), button:has-text("Promosi Aktif")').first();
     await expect(updatedButton).toBeVisible();
   });
 
@@ -88,18 +88,18 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await authenticateOwner(page, request);
     await page.goto('/owner');
 
-    await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Ringkasan' })).toBeVisible();
 
     // Buka New Pitch Modal
-    await page.click('button:has-text("New Pitch")');
-    await expect(page.locator('text=Tambah Pitch Baru')).toBeVisible();
+    await page.click('button:has-text("Lapangan Baru")');
+    await expect(page.locator('text=Tambah Lapangan Baru')).toBeVisible();
 
     // Tutup modal
     await page.click('button:has-text("Batal")');
-    await expect(page.locator('text=Tambah Pitch Baru')).not.toBeVisible();
+    await expect(page.locator('text=Tambah Lapangan Baru')).not.toBeVisible();
 
     // Buka Manage Modal
-    const manageBtn = page.locator('button:has-text("Manage")').first();
+    const manageBtn = page.locator('button:has-text("Kelola")').first();
     await expect(manageBtn).toBeVisible();
     await manageBtn.click();
     await expect(page.locator('text=Kelola Lapangan')).toBeVisible();
@@ -114,15 +114,15 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await page.goto('/owner');
 
     // Klik tab Bookings di sidebar
-    await page.locator('aside button:has-text("Bookings")').click();
+    await page.locator('aside button:has-text("Reservasi")').click();
 
     // Verifikasi header tab Bookings
-    await expect(page.locator('text=Reservations & Bookings')).toBeVisible();
+    await expect(page.locator('text=Reservasi & Pemesanan')).toBeVisible();
 
     // Verifikasi KPI cards
     await expect(page.locator('text=Total Reservasi')).toBeVisible();
-    await expect(page.locator('text=Confirmed').first()).toBeVisible();
-    await expect(page.locator('text=Pending').first()).toBeVisible();
+    await expect(page.locator('text=Terkonfirmasi').first()).toBeVisible();
+    await expect(page.locator('text=Menunggu').first()).toBeVisible();
 
     // Verifikasi tabel bookings memuat pemesan dari PostgreSQL
     await expect(page.locator('text=Julian Draxler')).toBeVisible();
@@ -147,10 +147,10 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await page.goto('/owner');
 
     // Klik tab Schedule di sidebar
-    await page.locator('aside button:has-text("Schedule")').click();
+    await page.locator('aside button:has-text("Jadwal")').click();
 
     // Verifikasi header tab Schedule
-    await expect(page.locator('text=Schedule & Time Slots')).toBeVisible();
+    await expect(page.locator('text=Jadwal & Slot Waktu')).toBeVisible();
 
     // Verifikasi tabs lapangan muncul
     await expect(page.locator('button:has-text("Arena X Elite")')).toBeVisible();
@@ -178,19 +178,19 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await page.goto('/owner');
 
     // Klik tab Revenue di sidebar
-    await page.locator('aside button:has-text("Revenue")').click();
+    await page.locator('aside button:has-text("Pendapatan")').click();
 
     // Verifikasi header tab Revenue
-    await expect(page.locator('text=Financial & Revenue')).toBeVisible();
+    await expect(page.locator('text=Keuangan & Pendapatan')).toBeVisible();
 
     // Verifikasi metrik finansial
-    await expect(page.locator('text=Gross Revenue')).toBeVisible();
-    await expect(page.locator('text=Net Earnings')).toBeVisible();
-    await expect(page.locator('text=Platform Fee (5%)')).toBeVisible();
+    await expect(page.getByText('Pendapatan Kotor', { exact: true })).toBeVisible();
+    await expect(page.getByText('Pendapatan Bersih', { exact: true })).toBeVisible();
+    await expect(page.locator('text=Biaya Platform (5%)')).toBeVisible();
     await expect(page.locator('text=$24,580.00')).toBeVisible();
 
     // Verifikasi breakdown lapangan
-    await expect(page.locator('text=Breakdown Pendapatan per Lapangan')).toBeVisible();
+    await expect(page.locator('text=Rincian Pendapatan per Lapangan')).toBeVisible();
     await expect(page.locator('text=Arena X Elite').first()).toBeVisible();
     await expect(page.locator('text=The Forest Turf').first()).toBeVisible();
 
@@ -204,10 +204,10 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     await page.goto('/owner');
 
     // Klik tab Settings di sidebar
-    await page.locator('aside button:has-text("Settings")').click();
+    await page.locator('aside button:has-text("Pengaturan")').click();
 
     // Verifikasi header tab Settings
-    await expect(page.locator('text=Venue & Account Settings')).toBeVisible();
+    await expect(page.locator('text=Pengaturan Fasilitas & Akun')).toBeVisible();
 
     // Verifikasi form profil venue terisi dari database
     const venueNameInput = page.locator('input[value*="Pitch Gallery"]');
@@ -220,5 +220,52 @@ test.describe('Owner Dashboard (Pitch Gallery Management) Suite', () => {
     // Simpan form dan verifikasi toast sukses
     await page.locator('button:has-text("Simpan Perubahan ke Database")').click();
     await expect(page.locator('text=berhasil disimpan ke database PostgreSQL')).toBeVisible();
+  });
+
+  test('9. Tambah Pitch Baru secara nyata via Modal dan verifikasi tersimpan di My Fields', async ({ page, request }) => {
+    await authenticateOwner(page, request);
+    await page.goto('/owner');
+
+    // Klik tombol Lapangan Baru di header
+    await page.locator('button:has-text("Lapangan Baru")').click();
+    await expect(page.locator('text=Tambah Lapangan Baru')).toBeVisible();
+
+    const uniquePitchName = `Grand Pitch ${Math.floor(Math.random() * 9000) + 1000}`;
+    await page.locator('input[placeholder*="Contoh: Arena"]').fill(uniquePitchName);
+    await page.locator('input[placeholder="85"]').fill('120');
+
+    // Submit form modal
+    await page.locator('button[type="submit"]:has-text("Simpan ke Database")').click();
+    await page.waitForTimeout(1000);
+
+    // Modal tertutup dan pitch baru terlihat di My Fields
+    await expect(page.locator('text=Tambah Lapangan Baru')).not.toBeVisible();
+    await expect(page.locator(`text=${uniquePitchName}`)).toBeVisible();
+  });
+
+  test('10. Unduh Laporan Finansial Owner (Export Report) dan Toast Konfirmasi', async ({ page, request }) => {
+    await authenticateOwner(page, request);
+    await page.goto('/owner');
+
+    const exportBtn = page.locator('button:has-text("Ekspor Laporan")');
+    await expect(exportBtn).toBeVisible();
+    await exportBtn.click();
+
+    // Verifikasi toast notifikasi
+    await expect(page.locator('text=Laporan owner berhasil diunduh dalam format CSV.')).toBeVisible();
+  });
+
+  test('11. Logout dari Owner Sidebar membersihkan sesi dan mengarahkan ke halaman login', async ({ page, request }) => {
+    await authenticateOwner(page, request);
+    await page.goto('/owner');
+
+    const logoutBtn = page.locator('aside button[title="Keluar Akun"]');
+    await expect(logoutBtn).toBeVisible();
+    await logoutBtn.click();
+
+    // Harus terarah ke /login
+    await page.waitForURL('**/login?message=logged_out');
+    const token = await page.evaluate(() => localStorage.getItem('lapang_token'));
+    expect(token).toBeNull();
   });
 });

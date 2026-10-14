@@ -33,6 +33,6 @@ export default defineConfig({
     command: 'npx next dev -p 3002',
     url: 'http://localhost:3002',
     reuseExistingServer: true,
-    timeout: 120 * 1000
+    timeout: 30 * 1000
   }
 });

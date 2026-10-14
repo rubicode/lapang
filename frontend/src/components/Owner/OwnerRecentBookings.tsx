@@ -32,7 +32,7 @@ export const OwnerRecentBookings: React.FC<OwnerRecentBookingsProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-black text-slate-900 tracking-tight">
-          Recent Bookings
+          Reservasi Terbaru
         </h2>
         <button
           title="Opsi Tambahan"
@@ -71,7 +71,13 @@ export const OwnerRecentBookings: React.FC<OwnerRecentBookingsProps> = ({
                   booking.status
                 )}`}
               >
-                {booking.status}
+                {booking.status.toLowerCase() === 'confirmed'
+                  ? 'Terkonfirmasi'
+                  : booking.status.toLowerCase() === 'pending'
+                  ? 'Menunggu'
+                  : booking.status.toLowerCase() === 'cancelled'
+                  ? 'Dibatalkan'
+                  : booking.status}
               </span>
               <p className="text-xs font-extrabold text-slate-900 mt-0.5">
                 {booking.currencySymbol}{booking.amount.toFixed(2)}
@@ -87,7 +93,7 @@ export const OwnerRecentBookings: React.FC<OwnerRecentBookingsProps> = ({
           onClick={onViewFullSchedule}
           className="text-[11px] font-black tracking-wider text-[#144723] hover:text-[#0C2B15] uppercase transition cursor-pointer"
         >
-          FULL SCHEDULE
+          LIHAT JADWAL LENGKAP
         </button>
       </div>
     </div>

@@ -94,7 +94,7 @@ export const OwnerScheduleView: React.FC<OwnerScheduleViewProps> = ({ onShowToas
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-[#132A17] tracking-tight">
-            Schedule & Time Slots
+            Jadwal & Slot Waktu
           </h2>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
             Manajemen ketersediaan slot waktu operasional langsung ke tabel court_schedules PostgreSQL.
@@ -174,15 +174,15 @@ export const OwnerScheduleView: React.FC<OwnerScheduleViewProps> = ({ onShowToas
         <div className="flex items-center gap-3 text-[11px] font-bold text-slate-600 flex-wrap">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span>Available (Buka)</span>
+            <span>Tersedia</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#123E24]"></span>
-            <span>Booked (Terisi)</span>
+            <span>Terisi</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-            <span>Blocked (Ditutup)</span>
+            <span>Ditutup</span>
           </div>
         </div>
       </div>
@@ -233,7 +233,7 @@ export const OwnerScheduleView: React.FC<OwnerScheduleViewProps> = ({ onShowToas
                           : 'bg-emerald-100 text-emerald-800'
                       }`}
                     >
-                      {slot.status}
+                      {slot.status === 'booked' ? 'TERISI' : slot.status === 'blocked' ? 'DITUTUP' : 'TERSEDIA'}
                     </span>
                   </div>
 
@@ -241,10 +241,10 @@ export const OwnerScheduleView: React.FC<OwnerScheduleViewProps> = ({ onShowToas
                     <div className="mt-3 space-y-1">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white/90">
                         <User className="w-3.5 h-3.5 text-[#DCF5D8]" />
-                        <span className="truncate">{slot.bookerName || 'Member Booker'}</span>
+                        <span className="truncate">{slot.bookerName || 'Pelanggan Terdaftar'}</span>
                       </div>
                       <p className="text-[10px] font-mono text-white/70">
-                        Code: {slot.bookingCode || 'PITCH-RESERV'}
+                        Kode: {slot.bookingCode || 'PITCH-RESERV'}
                       </p>
                     </div>
                   ) : isBlocked ? (

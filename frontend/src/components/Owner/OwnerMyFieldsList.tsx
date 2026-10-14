@@ -22,7 +22,7 @@ export const OwnerMyFieldsList: React.FC<OwnerMyFieldsListProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <h2 className="text-lg font-black text-slate-900 tracking-tight">
-            My Fields
+            Lapangan Saya
           </h2>
           <span className="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700">
             {fields.length} Total
@@ -33,7 +33,7 @@ export const OwnerMyFieldsList: React.FC<OwnerMyFieldsListProps> = ({
           onClick={onViewAll}
           className="text-xs font-extrabold text-[#154624] hover:text-[#0C2A15] transition cursor-pointer"
         >
-          View All
+          Lihat Semua
         </button>
       </div>
 
@@ -77,7 +77,7 @@ export const OwnerMyFieldsList: React.FC<OwnerMyFieldsListProps> = ({
                             : 'bg-amber-100 text-amber-800'
                         }`}
                       >
-                        {field.status}
+                        {field.status === 'ACTIVE' ? 'AKTIF' : 'PERAWATAN'}
                       </span>
                     </div>
 
@@ -110,7 +110,7 @@ export const OwnerMyFieldsList: React.FC<OwnerMyFieldsListProps> = ({
                         {field.currencySymbol}{field.priceHourly}
                       </span>
                       <span className="text-xs font-semibold text-slate-400">
-                        /hour
+                        /jam
                       </span>
                     </div>
 
@@ -118,7 +118,7 @@ export const OwnerMyFieldsList: React.FC<OwnerMyFieldsListProps> = ({
                       onClick={() => onManageField(field)}
                       className="px-4 py-1.5 rounded-full bg-[#EBF0E6] hover:bg-[#DEE5D7] text-slate-800 text-xs font-extrabold transition shadow-2xs cursor-pointer"
                     >
-                      Manage
+                      Kelola
                     </button>
                   </div>
                 </div>

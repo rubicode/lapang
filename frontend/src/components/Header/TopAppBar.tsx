@@ -57,11 +57,11 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'admin':
-        return { text: 'Super Admin 🛡️', bg: 'bg-purple-100 text-purple-800' };
+        return { text: 'Admin Global 🛡️', bg: 'bg-purple-100 text-purple-800' };
       case 'owner':
-        return { text: 'Venue Owner 🏢', bg: 'bg-amber-100 text-amber-800' };
+        return { text: 'Pemilik Lapangan 🏢', bg: 'bg-amber-100 text-amber-800' };
       default:
-        return { text: 'Verified Player 🏅', bg: 'bg-brand-100 text-brand-800' };
+        return { text: 'Pemain Terverifikasi 🏅', bg: 'bg-brand-100 text-brand-800' };
     }
   };
 
@@ -119,10 +119,10 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
             <Link
               href="/admin"
               className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 bg-emerald-100/90 hover:bg-emerald-200/90 px-3 py-1.5 rounded-xl transition border border-emerald-300/60 shadow-2xs cursor-pointer"
-              title="Buka Admin Console (Pitch Gallery Management)"
+              title="Buka Konsol Admin (Manajemen Pitch Gallery)"
             >
               <LayoutDashboard className="w-3.5 h-3.5 text-emerald-800" />
-              <span>Admin Console</span>
+              <span>Dasbor Admin</span>
             </Link>
 
             <Link
@@ -130,7 +130,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
               className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-brand-800 px-3 py-2 rounded-lg hover:bg-brand-50 transition cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4 text-brand-600" />
-              <span>Owner Dashboard</span>
+              <span>Dasbor Pemilik</span>
             </Link>
 
             <button
@@ -166,7 +166,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
                   type="button"
                   onClick={handleLogout}
                   className="hidden sm:block p-1 text-slate-400 hover:text-red-600 transition"
-                  title="Logout"
+                  title="Keluar"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>

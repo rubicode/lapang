@@ -25,12 +25,12 @@ export const PeakHoursTipCard: React.FC<PeakHoursTipCardProps> = ({
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-4 h-4 text-emerald-300" />
           <h3 className="text-sm font-extrabold tracking-tight text-white">
-            Peak Hours Tip
+            Tips Jam Sibuk
           </h3>
         </div>
 
         <p className="text-xs text-emerald-100/90 leading-relaxed font-normal mb-5">
-          Most bookings are happening between 18:00 and 21:00. Consider offering an &quot;Early Bird&quot; discount to fill morning slots.
+          Sebagian besar reservasi terjadi antara pukul 18:00 dan 21:00. Pertimbangkan untuk menawarkan diskon &quot;Early Bird&quot; untuk mengisi slot jam pagi.
         </p>
 
         <button
@@ -45,10 +45,10 @@ export const PeakHoursTipCard: React.FC<PeakHoursTipCardProps> = ({
           {isPromoApplied ? (
             <>
               <CheckCircle2 className="w-3.5 h-3.5 text-[#0E301B]" />
-              <span>Promotion Active (-20%)</span>
+              <span>Promosi Aktif (-20%)</span>
             </>
           ) : (
-            <span>{isLoading ? 'Applying...' : 'Apply Promotion'}</span>
+            <span>{isLoading ? 'Menerapkan...' : 'Terapkan Promosi'}</span>
           )}
         </button>
       </div>

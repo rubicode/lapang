@@ -16,10 +16,10 @@ export const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6">
       <div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Platform Overview
+          Ringkasan Platform
         </h2>
         <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
-          Real-time performance and management metrics.
+          Metrik performa dan manajemen langsung secara real-time.
         </p>
       </div>
 
@@ -29,7 +29,7 @@ export const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
           className="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-800 bg-[#e7ebe7] hover:bg-slate-200 transition-colors shadow-2xs flex items-center gap-2 cursor-pointer"
         >
           <Download className="w-4 h-4 text-slate-600" />
-          <span>Download CSV</span>
+          <span>Unduh CSV</span>
         </button>
 
         <button
@@ -37,7 +37,7 @@ export const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
           className="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold text-white bg-[#0e3813] hover:bg-[#14471b] active:scale-[0.98] transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Invite Owner</span>
+          <span>Undang Pengelola</span>
         </button>
       </div>
     </div>

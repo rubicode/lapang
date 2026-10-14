@@ -9,10 +9,10 @@ export const AdminFooter: React.FC = () => {
         {/* Brand Information */}
         <div>
           <h4 className="text-base font-extrabold text-slate-900 tracking-tight">
-            Pitch Gallery
+            Lapang
           </h4>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
-            Elite Sports Facility Management Console
+            Konsol Manajemen Fasilitas Olahraga Terpadu
           </p>
         </div>
 
@@ -20,33 +20,33 @@ export const AdminFooter: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 text-xs">
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-slate-600 font-medium">
             <button
-              onClick={() => alert("Contact support: support@pitchgallery.com")}
+              onClick={() => alert("Hubungi bantuan: support@lapang.id")}
               className="hover:text-slate-900 transition-colors cursor-pointer"
             >
-              Contact
+              Kontak
             </button>
             <button
-              onClick={() => alert("Pitch Gallery & LapangID Platform")}
+              onClick={() => alert("Platform Lapang.id")}
               className="hover:text-slate-900 transition-colors cursor-pointer"
             >
-              About Us
+              Tentang Kami
             </button>
             <button
               onClick={() => alert("Kebijakan Privasi Kepatuhan GDPR & Standar Keamanan Data")}
               className="hover:text-slate-900 transition-colors cursor-pointer"
             >
-              Privacy Policy
+              Kebijakan Privasi
             </button>
             <button
               onClick={() => alert("Syarat & Ketentuan Pengelola Fasilitas")}
               className="hover:text-slate-900 transition-colors cursor-pointer"
             >
-              Terms of Service
+              Syarat &amp; Ketentuan
             </button>
           </div>
 
           <p className="text-slate-400 font-normal">
-            © 2024 Pitch Gallery. All rights reserved.
+            © 2024 Lapang. Hak cipta dilindungi.
           </p>
         </div>
       </div>

@@ -204,7 +204,7 @@ export const VenueDetailDrawer: React.FC<VenueDetailDrawerProps> = ({
                   />
                   <div className="absolute top-3 left-3 bg-brand-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
                     <BadgeCheck className="w-3.5 h-3.5 text-brand-300" />
-                    <span>Verified MinIO S3 Storage</span>
+                    <span>Penyimpanan MinIO S3 Terverifikasi</span>
                   </div>
                 </div>
                 <div className="col-span-1 grid grid-rows-2 gap-2">
@@ -246,7 +246,7 @@ export const VenueDetailDrawer: React.FC<VenueDetailDrawerProps> = ({
                   ⚡ Konfirmasi Instan
                 </span>
                 <span className="text-[10px] font-extrabold px-2.5 py-1 bg-white text-slate-700 border border-gray-200 rounded-md">
-                  🛡️ Bebas Reschedule
+                  🛡️ Bebas Ubah Jadwal
                 </span>
               </div>
             </div>
@@ -445,7 +445,7 @@ export const VenueDetailDrawer: React.FC<VenueDetailDrawerProps> = ({
                           <div>
                             <p className="font-bold text-slate-800">{r.user}</p>
                             <span className="text-[10px] text-brand-700 font-semibold flex items-center gap-0.5">
-                              <BadgeCheck className="w-3 h-3" /> {r.role}
+                              <BadgeCheck className="w-3 h-3" /> {r.role === 'Verified Booker' ? 'Penyewa Terverifikasi' : r.role}
                             </span>
                           </div>
                         </div>

@@ -47,7 +47,7 @@ export const FixIssuesModal: React.FC<FixIssuesModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Action Required Checklist
+                Daftar Tindakan Diperlukan
               </h3>
               <p className="text-xs text-slate-500">
                 {applicant.facilityName} • {applicant.user.name}

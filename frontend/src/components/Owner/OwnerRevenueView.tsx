@@ -64,7 +64,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-black text-[#132A17] tracking-tight">
-            Financial & Revenue
+            Keuangan & Pendapatan
           </h2>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
             Ringkasan pendapatan kotor, penerimaan bersih, dan settlement pembayaran langsung dari PostgreSQL.
@@ -89,7 +89,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
             ) : (
               <Download className="w-3.5 h-3.5" />
             )}
-            <span>Export CSV</span>
+            <span>Ekspor CSV</span>
           </button>
         </div>
       </div>
@@ -111,7 +111,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
             <div className="p-5 rounded-2xl bg-[#123E24] text-white shadow-xs relative overflow-hidden">
               <div className="relative z-10">
                 <span className="text-[11px] font-bold text-[#DCF5D8] uppercase tracking-wider block">
-                  Gross Revenue
+                  Pendapatan Kotor
                 </span>
                 <p className="text-2xl font-black text-white mt-1.5 font-mono">
                   {data.currencySymbol}{data.grossRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -126,7 +126,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
             {/* Net Earnings */}
             <div className="p-5 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                Net Earnings
+                Pendapatan Bersih
               </span>
               <p className="text-2xl font-black text-slate-900 mt-1.5 font-mono">
                 {data.currencySymbol}{data.netRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -139,21 +139,21 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
             {/* Platform Fee 5% */}
             <div className="p-5 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                Platform Fee (5%)
+                Biaya Platform (5%)
               </span>
               <p className="text-2xl font-black text-slate-900 mt-1.5 font-mono">
                 {data.currencySymbol}{data.platformFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className="text-[10px] font-semibold text-emerald-700 mt-2 flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                <span>Tier Premium Partner</span>
+                <span>Tier Mitra Premium</span>
               </p>
             </div>
 
             {/* Pending Receivables */}
             <div className="p-5 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                Pending Bookings
+                Reservasi Tertunda
               </span>
               <p className="text-2xl font-black text-amber-800 mt-1.5 font-mono">
                 {data.currencySymbol}{data.pendingRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -166,13 +166,13 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
             {/* Average Order Value (AOV) */}
             <div className="p-5 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-                Avg. Order Value
+                Nilai Rata-rata Pesanan
               </span>
               <p className="text-2xl font-black text-slate-900 mt-1.5 font-mono">
                 {data.currencySymbol}{data.averageOrderValue.toFixed(2)}
               </p>
               <p className="text-[10px] font-semibold text-slate-400 mt-2">
-                {data.totalSettlementCount} transaksi settled
+                {data.totalSettlementCount} transaksi lunas
               </p>
             </div>
           </div>
@@ -181,7 +181,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
           <div className="p-6 rounded-2xl bg-white border border-[#E5E9DF] shadow-2xs">
             <h3 className="text-base font-black text-[#132A17] tracking-tight mb-4 flex items-center gap-2">
               <PieChart className="w-4 h-4 text-[#133E1E]" />
-              <span>Breakdown Pendapatan per Lapangan</span>
+              <span>Rincian Pendapatan per Lapangan</span>
             </h3>
 
             <div className="space-y-4">
@@ -195,7 +195,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-500 font-semibold">{court.totalBookings} booking</span>
+                      <span className="text-slate-500 font-semibold">{court.totalBookings} reservasi</span>
                       <span className="font-mono font-black text-slate-900">
                         {data.currencySymbol}{court.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({court.percentage}%)
                       </span>
@@ -230,7 +230,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-[#F8F9F5] border-b border-[#E5E9DF] text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    <th className="py-3.5 px-4">Invoice / Code</th>
+                    <th className="py-3.5 px-4">Kode Invoice</th>
                     <th className="py-3.5 px-4">Nama Pelanggan</th>
                     <th className="py-3.5 px-4">Lapangan</th>
                     <th className="py-3.5 px-4">Jadwal Main</th>
@@ -262,7 +262,7 @@ export const OwnerRevenueView: React.FC<OwnerRevenueViewProps> = ({ onShowToast 
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#DCF5D8] text-[#133E1E] border border-[#BCE8B6]">
-                          {tx.status}
+                          {tx.status === 'settlement' || tx.status === 'confirmed' ? 'Lunas' : tx.status}
                         </span>
                       </td>
                     </tr>

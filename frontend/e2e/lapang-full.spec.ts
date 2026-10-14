@@ -18,7 +18,7 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
 
     // User profile status
     await expect(page.locator('text=Rian Pratama')).toBeVisible();
-    await expect(page.locator('text=Verified Player')).toBeVisible();
+    await expect(page.locator('text=Pemain Terverifikasi')).toBeVisible();
 
     // Quick search input
     const searchInput = page.locator('input[placeholder*="Cari lapangan"]');
@@ -50,7 +50,7 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     await venueCard.click();
 
     // Pastikan Drawer terbuka
-    await expect(page.locator('text=Verified MinIO S3 Storage')).toBeVisible();
+    await expect(page.locator('text=Penyimpanan MinIO S3 Terverifikasi')).toBeVisible();
     await expect(page.locator('text=Tentang Venue & Lapangan')).toBeVisible();
     await expect(page.locator('text=Fasilitas Penunjang')).toBeVisible();
     await expect(page.locator('text=Jam Operasional')).toBeVisible();
@@ -62,7 +62,7 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     await expect(page.locator('text=Penerangan Lampu')).toBeVisible();
     await expect(page.locator('text=Kebersihan & Toilet')).toBeVisible();
     await expect(page.locator('text=Pelayanan Staf')).toBeVisible();
-    await expect(page.locator('text=Verified Booker').first()).toBeVisible();
+    await expect(page.locator('text=Penyewa Terverifikasi').first()).toBeVisible();
   });
 
   test('4. Alur Pemilihan Slot Jam & Checkout Midtrans QRIS', async ({ page }) => {
@@ -144,6 +144,59 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     await expect(page.locator('button:has-text("Pemain Olahraga")')).toBeVisible();
     await expect(page.locator('button:has-text("Pengelola Venue")')).toBeVisible();
     await expect(page.locator('button:has-text("Daftar Sekarang")')).toBeVisible();
+  });
+
+  test('7. Interaksi Radius Jangkauan (5 km, 10 km, 25 km, Semua)', async ({ page }) => {
+    // Klik chip radius 5 km
+    const rad5 = page.getByRole('button', { name: '5 km', exact: true });
+    await expect(rad5).toBeVisible();
+    await rad5.click();
+    await expect(rad5).toHaveClass(/bg-brand-800/);
+
+    // Klik chip radius 25 km
+    const rad25 = page.getByRole('button', { name: '25 km', exact: true });
+    await expect(rad25).toBeVisible();
+    await rad25.click();
+    await expect(rad25).toHaveClass(/bg-brand-800/);
+
+    // Klik chip radius Semua
+    const radAll = page.getByRole('button', { name: 'Semua', exact: true }).first();
+    await expect(radAll).toBeVisible();
+    await radAll.click();
+    await expect(radAll).toHaveClass(/bg-brand-800/);
+  });
+
+  test('8. Pengurutan Katalog Venue (Harga Terendah, Rating Tertinggi, Rekomendasi)', async ({ page }) => {
+    const sortSelect = page.locator('select').nth(1); // Dropdown Urutkan di header katalog
+    await expect(sortSelect).toBeVisible();
+
+    // Urutkan Harga Terendah
+    await sortSelect.selectOption('price_low');
+    await page.waitForTimeout(500);
+
+    // Urutkan Rating Tertinggi
+    await sortSelect.selectOption('rating_high');
+    await page.waitForTimeout(500);
+
+    // Kembalikan ke Rekomendasi
+    await sortSelect.selectOption('recommended');
+    await page.waitForTimeout(500);
+  });
+
+  test('9. Fitur Pencarian Kosong dan Reset Semua Filter', async ({ page }) => {
+    const searchInput = page.locator('input[placeholder*="Cari lapangan"]');
+    await searchInput.fill('venue_tidak_ada_xyz_999');
+
+    // Menampilkan pesan kosong
+    await expect(page.locator('text=Tidak ada lapangan yang cocok')).toBeVisible();
+
+    // Klik tombol Reset Semua Filter
+    const resetBtn = page.locator('button:has-text("Reset Semua Filter")');
+    await expect(resetBtn).toBeVisible();
+    await resetBtn.click();
+
+    // Katalog kembali menampilkan daftar venue
+    await expect(page.locator('text=The Emerald Arena Jakarta')).toBeVisible();
   });
 });
 

@@ -21,10 +21,10 @@ export const ActiveFieldMonitoringGrid: React.FC<ActiveFieldMonitoringGridProps>
       <div className="flex items-center justify-between pb-4">
         <div>
           <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
-            Active Field Monitoring
+            Pemantauan Lapangan Aktif
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Live view of facility occupancy
+            Pantauan langsung okupansi fasilitas
           </p>
         </div>
 
@@ -32,7 +32,7 @@ export const ActiveFieldMonitoringGrid: React.FC<ActiveFieldMonitoringGridProps>
           onClick={onOpenMonitoringHub}
           className="text-xs sm:text-sm font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1 group transition cursor-pointer"
         >
-          <span>View Monitoring Hub</span>
+          <span>Buka Pusat Pemantauan</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
@@ -65,12 +65,12 @@ export const ActiveFieldMonitoringGrid: React.FC<ActiveFieldMonitoringGridProps>
                   {isLive ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wide uppercase bg-[#0e3813] text-white shadow-sm">
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                      <span>LIVE</span>
+                      <span>LANGSUNG</span>
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wide uppercase bg-[#0e3813] text-white shadow-sm">
                       <Wrench className="w-3 h-3 text-amber-300" />
-                      <span>MAINTENANCE</span>
+                      <span>PERAWATAN</span>
                     </span>
                   )}
                 </div>
@@ -110,19 +110,19 @@ export const ActiveFieldMonitoringGrid: React.FC<ActiveFieldMonitoringGridProps>
 
                       {/* Occupancy rate */}
                       <span className="text-xs sm:text-sm font-extrabold text-emerald-800">
-                        {field.occupancyFormatted || '60% Occupied'}
+                        {field.occupancyFormatted || '60% Terisi'}
                       </span>
                     </>
                   ) : (
                     <>
                       {/* SubText for Maintenance */}
                       <span className="text-xs italic text-slate-400 font-medium">
-                        {field.subText || 'Cleaning in progress...'}
+                        {field.subText || 'Pembersihan sedang berlangsung...'}
                       </span>
 
                       {/* Offline status */}
                       <span className="text-xs sm:text-sm font-extrabold text-emerald-800">
-                        {field.occupancyStatus || 'Offline'}
+                        {field.occupancyStatus || 'Nonaktif'}
                       </span>
                     </>
                   )}

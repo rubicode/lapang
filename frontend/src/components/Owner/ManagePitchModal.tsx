@@ -169,8 +169,8 @@ export const ManagePitchModal: React.FC<ManagePitchModalProps> = ({
                 onChange={(e) => setIsActive(e.target.value === 'true')}
                 className="w-full px-3 py-2 text-xs font-bold rounded-xl border border-slate-200 focus:outline-none focus:border-[#133E1E] bg-white cursor-pointer"
               >
-                <option value="true">ACTIVE</option>
-                <option value="false">MAINTENANCE</option>
+                <option value="true">AKTIF</option>
+                <option value="false">PERAWATAN</option>
               </select>
             </div>
           </div>

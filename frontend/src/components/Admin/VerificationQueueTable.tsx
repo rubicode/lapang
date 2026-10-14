@@ -51,25 +51,25 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
       case 'Pending Review':
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#fef3c7] text-[#92400e]">
-            Pending Review
+            Menunggu Peninjauan
           </span>
         );
       case 'Verified':
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#dcfce7] text-[#166534]">
-            Verified
+            Terverifikasi
           </span>
         );
       case 'Action Required':
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#fee2e2] text-[#991b1b]">
-            Action Required
+            Perlu Tindakan
           </span>
         );
       case 'Rejected':
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
-            Rejected
+            Ditolak
           </span>
         );
       default:
@@ -83,10 +83,10 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
       <div className="p-5 sm:p-6 pb-4 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
-            Verification Queue
+            Antrean Verifikasi
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Review and approve new facility owners
+            Tinjau dan verifikasi pemilik fasilitas baru
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              placeholder="Search by name or email..."
+              placeholder="Cari nama fasilitas atau email..."
               className="w-full pl-11 pr-4 py-2 bg-[#f4f5f3] hover:bg-[#eceee9] focus:bg-white text-xs sm:text-sm rounded-full text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 transition-all border border-transparent focus:border-gray-200"
             />
             {searchQuery && (
@@ -122,19 +122,19 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
           <thead>
             <tr className="border-b border-gray-100 bg-white">
               <th className="py-3 px-6 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                USER DETAILS
+                DETAIL PENGGUNA
               </th>
               <th className="py-3 px-6 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                FACILITY NAME
+                NAMA FASILITAS
               </th>
               <th className="py-3 px-6 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                SUBMITTED DATE
+                TANGGAL PENGAJUAN
               </th>
               <th className="py-3 px-6 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 STATUS
               </th>
               <th className="py-3 px-6 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">
-                ACTIONS
+                AKSI
               </th>
             </tr>
           </thead>
@@ -205,14 +205,14 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
                         onClick={() => onReviewApplication(app)}
                         className="font-bold text-slate-900 hover:text-emerald-800 hover:underline transition-colors cursor-pointer text-sm"
                       >
-                        Review
+                        Tinjau
                       </button>
                     ) : app.status === 'Action Required' ? (
                       <button
                         onClick={() => onFixIssues(app)}
                         className="font-bold text-[#b91c1c] hover:text-red-800 hover:underline transition-colors cursor-pointer text-sm"
                       >
-                        Fix Issues
+                        Perbaiki Masalah
                       </button>
                     ) : (
                       <div className="inline-block relative">
@@ -275,7 +275,7 @@ export const VerificationQueueTable: React.FC<VerificationQueueTableProps> = ({
       {/* Table Footer with Pagination */}
       <div className="p-4 sm:p-5 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white">
         <p className="text-xs text-slate-500 font-medium">
-          Showing 1 to {paginatedApps.length} of {applications.length >= 28 ? 28 : applications.length} pending applications
+          Menampilkan 1 hingga {paginatedApps.length} dari {applications.length >= 28 ? 28 : applications.length} pengajuan antrean
         </p>
 
         {/* Pagination buttons: < 1 2 3 > */}

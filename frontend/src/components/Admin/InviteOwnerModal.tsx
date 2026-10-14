@@ -68,7 +68,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">
-                Invite Facility Owner
+                Undang Pengelola Fasilitas
               </h3>
               <p className="text-xs text-slate-500">
                 Kirim tautan pendaftaran dan verifikasi langsung ke pengelola venue
@@ -87,7 +87,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs sm:text-sm">
           <div>
             <label className="text-xs font-bold text-slate-700 block mb-1">
-              Owner Full Name *
+              Nama Lengkap Pengelola *
             </label>
             <div className="relative flex items-center bg-[#f4f5f3] rounded-xl px-3.5 py-2.5">
               <User className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
@@ -96,7 +96,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Marco Arantes"
+                placeholder="Contoh: Marco Arantes"
                 className="w-full bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-xs sm:text-sm"
               />
             </div>
@@ -104,7 +104,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
 
           <div>
             <label className="text-xs font-bold text-slate-700 block mb-1">
-              Owner Email Address *
+              Alamat Email Pengelola *
             </label>
             <div className="relative flex items-center bg-[#f4f5f3] rounded-xl px-3.5 py-2.5">
               <Mail className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
@@ -113,7 +113,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. marco.a@fieldhub.pt"
+                placeholder="Contoh: marco.a@fieldhub.pt"
                 className="w-full bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-xs sm:text-sm"
               />
             </div>
@@ -121,7 +121,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
 
           <div>
             <label className="text-xs font-bold text-slate-700 block mb-1">
-              Facility / Arena Name *
+              Nama Fasilitas / Gelanggang *
             </label>
             <div className="relative flex items-center bg-[#f4f5f3] rounded-xl px-3.5 py-2.5">
               <Building className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
@@ -130,7 +130,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
                 required
                 value={facilityName}
                 onChange={(e) => setFacilityName(e.target.value)}
-                placeholder="e.g. Arena Lisbon Pro"
+                placeholder="Contoh: Arena Lisbon Pro"
                 className="w-full bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-xs sm:text-sm"
               />
             </div>
@@ -139,7 +139,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">
-                Sport Category
+                Kategori Olahraga
               </label>
               <select
                 value={sportType}
@@ -147,16 +147,16 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
                 className="w-full bg-[#f4f5f3] rounded-xl px-3 py-2.5 text-xs text-slate-800 font-medium focus:outline-none"
               >
                 <option value="Futsal & Mini Soccer">Futsal &amp; Mini Soccer</option>
-                <option value="Badminton">Badminton</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Padel & Tennis">Padel &amp; Tennis</option>
-                <option value="Volleyball">Volleyball</option>
+                <option value="Badminton">Bulu Tangkis (Badminton)</option>
+                <option value="Basketball">Bola Basket</option>
+                <option value="Padel & Tennis">Padel &amp; Tenis</option>
+                <option value="Volleyball">Bola Voli</option>
               </select>
             </div>
 
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">
-                Courts Count
+                Jumlah Lapangan
               </label>
               <input
                 type="number"
@@ -171,7 +171,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
 
           <div>
             <label className="text-xs font-bold text-slate-700 block mb-1">
-              City / Location
+              Kota / Lokasi
             </label>
             <div className="relative flex items-center bg-[#f4f5f3] rounded-xl px-3.5 py-2.5">
               <MapPin className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
@@ -179,7 +179,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Lisbon, Portugal atau Jakarta, ID"
+                placeholder="Contoh: Jakarta, ID atau Lisbon, Portugal"
                 className="w-full bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none font-medium text-xs sm:text-sm"
               />
             </div>
@@ -192,7 +192,7 @@ export const InviteOwnerModal: React.FC<InviteOwnerModalProps> = ({
               className="w-full py-3 bg-[#0e3813] hover:bg-[#14471b] text-white text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? 'Mengirim Undangan...' : 'Send Official Invitation'}</span>
+              <span>{isSubmitting ? 'Mengirim Undangan...' : 'Kirim Undangan Resmi'}</span>
             </button>
           </div>
         </form>

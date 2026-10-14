@@ -127,7 +127,7 @@ export const SpecificationFilterModal: React.FC<SpecificationFilterModalProps> =
                 }
                 className="text-brand-800 rounded"
               />
-              <span>Interlocking Flooring</span>
+              <span>Lantai Interlock (Futsal)</span>
             </label>
             <label className="flex items-center gap-2 p-2 rounded-lg border border-gray-200 cursor-pointer hover:bg-brand-50">
               <input

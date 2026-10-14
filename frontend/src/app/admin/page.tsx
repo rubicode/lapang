@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
     totalOwnersGrowth: '+4%',
     activeBookings: 1120,
     activeBookingsFormatted: '1,120',
-    activeBookingsBadge: 'Active',
+    activeBookingsBadge: 'Aktif',
     monthlyRevenue: 42912,
     monthlyRevenueFormatted: '$42,912',
     currency: '$'
@@ -62,7 +62,7 @@ export default function AdminDashboardPage() {
     avatarUrl?: string;
   }>({
     name: 'Alex Thompson',
-    role: 'Global Admin',
+    role: 'Admin Global',
     email: 'alex.t@pitchgallery.com',
     avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&q=80'
   });
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
           initialsColor: 'text-emerald-800'
         },
         facilityName: newOwnerData.facilityName,
-        submittedDate: 'Just now',
+        submittedDate: 'Baru saja',
         status: 'Pending Review',
         sportType: newOwnerData.sportType,
         location: newOwnerData.location,
@@ -267,9 +267,9 @@ export default function AdminDashboardPage() {
             ...f,
             status: nextStatus,
             badgeType: nextStatus === 'LIVE' ? 'live' : 'maintenance',
-            occupancyFormatted: nextStatus === 'LIVE' ? '75% Occupied' : undefined,
-            occupancyStatus: nextStatus === 'MAINTENANCE' ? 'Offline' : undefined,
-            subText: nextStatus === 'MAINTENANCE' ? 'Cleaning in progress...' : undefined
+            occupancyFormatted: nextStatus === 'LIVE' ? '75% Terisi' : undefined,
+            occupancyStatus: nextStatus === 'MAINTENANCE' ? 'Nonaktif' : undefined,
+            subText: nextStatus === 'MAINTENANCE' ? 'Pembersihan sedang berlangsung...' : undefined
           };
         }
         return f;
@@ -311,8 +311,8 @@ export default function AdminDashboardPage() {
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
           <div>
-            <h1 className="text-base font-bold text-slate-900 leading-tight">Management</h1>
-            <p className="text-[10px] text-slate-400">Dashboard</p>
+            <h1 className="text-base font-bold text-slate-900 leading-tight">Manajemen</h1>
+            <p className="text-[10px] text-slate-400">Dasbor</p>
           </div>
         </div>
 
@@ -321,7 +321,7 @@ export default function AdminDashboardPage() {
           className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Public Map</span>
+          <span>Peta Publik</span>
         </Link>
       </div>
 
@@ -399,14 +399,14 @@ export default function AdminDashboardPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
-                    <h2 className="text-2xl font-extrabold text-slate-900">Fields Directory</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900">Direktori Lapangan</h2>
                     <p className="text-xs text-slate-500 mt-1">Daftar seluruh lapangan dan gelanggang olahraga terdaftar.</p>
                   </div>
                   <button
                     onClick={() => setActiveTab('users')}
                     className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-2 rounded-xl hover:bg-emerald-100 transition"
                   >
-                    ← Kembali ke Overview
+                    ← Kembali ke Ringkasan
                   </button>
                 </div>
                 <ActiveFieldMonitoringGrid
@@ -423,14 +423,14 @@ export default function AdminDashboardPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
-                    <h2 className="text-2xl font-extrabold text-slate-900">Master Bookings Ledger</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900">Buku Besar Reservasi Master</h2>
                     <p className="text-xs text-slate-500 mt-1">Rekap seluruh transaksi sewa slot real-time dengan proteksi ACID.</p>
                   </div>
                   <button
                     onClick={() => setActiveTab('users')}
                     className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-2 rounded-xl hover:bg-emerald-100 transition"
                   >
-                    ← Kembali ke Overview
+                    ← Kembali ke Ringkasan
                   </button>
                 </div>
                 <div className="p-8 bg-white rounded-2xl border border-gray-200 text-center">
@@ -443,19 +443,19 @@ export default function AdminDashboardPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
-                    <h2 className="text-2xl font-extrabold text-slate-900">Financial &amp; Platform Reports</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900">Laporan Keuangan &amp; Platform</h2>
                     <p className="text-xs text-slate-500 mt-1">Laporan analitik pendapatan bulanan dan kepatuhan fasilitas.</p>
                   </div>
                   <button
                     onClick={() => setActiveTab('users')}
                     className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-2 rounded-xl hover:bg-emerald-100 transition"
                   >
-                    ← Kembali ke Overview
+                    ← Kembali ke Ringkasan
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-6 bg-[#14532d] text-white rounded-2xl">
-                    <p className="text-xs text-emerald-200">Gross Monthly Revenue</p>
+                    <p className="text-xs text-emerald-200">Pendapatan Bulanan Kotor</p>
                     <p className="text-3xl font-extrabold mt-1">{stats.monthlyRevenueFormatted}</p>
                     <p className="text-xs text-emerald-300 mt-2">↑ 18.4% peningkatan dibandingkan bulan lalu</p>
                   </div>
@@ -471,20 +471,20 @@ export default function AdminDashboardPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                   <div>
-                    <h2 className="text-2xl font-extrabold text-slate-900">Console Settings</h2>
+                    <h2 className="text-2xl font-extrabold text-slate-900">Pengaturan Konsol</h2>
                     <p className="text-xs text-slate-500 mt-1">Konfigurasi hak akses RBAC, parameter audit, dan integrasi MinIO.</p>
                   </div>
                   <button
                     onClick={() => setActiveTab('users')}
                     className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-2 rounded-xl hover:bg-emerald-100 transition"
                   >
-                    ← Kembali ke Overview
+                    ← Kembali ke Ringkasan
                   </button>
                 </div>
                 <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-bold text-sm text-slate-900">Super Admin RBAC Multi-Factor Authentication</p>
+                      <p className="font-bold text-sm text-slate-900">Autentikasi Multi-Faktor RBAC Admin Global</p>
                       <p className="text-xs text-slate-500">Perlindungan berlapis akun Alex Thompson (Global Admin).</p>
                     </div>
                     <span className="text-xs font-bold px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full">Aktif</span>

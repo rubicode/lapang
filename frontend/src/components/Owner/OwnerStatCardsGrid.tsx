@@ -24,7 +24,7 @@ export const OwnerStatCardsGrid: React.FC<OwnerStatCardsGridProps> = ({ stats })
         </div>
         <div>
           <p className="text-xs font-semibold text-slate-500 mb-1">
-            Total Revenue
+            Total Pendapatan
           </p>
           <p className="text-2xl font-black text-slate-900 tracking-tight">
             {stats.revenueFormatted || '$24,580.00'}
@@ -39,12 +39,12 @@ export const OwnerStatCardsGrid: React.FC<OwnerStatCardsGridProps> = ({ stats })
             <Calendar className="w-4 h-4 stroke-[2.5]" />
           </div>
           <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-[#DCF5D8] text-[#1D5E21]">
-            {stats.bookingDemandBadge || 'High'}
+            {stats.bookingDemandBadge === 'High' ? 'Tinggi' : stats.bookingDemandBadge || 'Tinggi'}
           </span>
         </div>
         <div>
           <p className="text-xs font-semibold text-slate-500 mb-1">
-            Active Bookings
+            Reservasi Aktif
           </p>
           <p className="text-2xl font-black text-slate-900 tracking-tight">
             {stats.activeBookings || 142}
@@ -64,7 +64,7 @@ export const OwnerStatCardsGrid: React.FC<OwnerStatCardsGridProps> = ({ stats })
         </div>
         <div>
           <p className="text-xs font-semibold text-slate-500 mb-1">
-            Avg. Rating
+            Rating Rata-rata
           </p>
           <p className="text-2xl font-black text-slate-900 tracking-tight">
             {stats.avgRatingScore || '98%'}
@@ -81,7 +81,7 @@ export const OwnerStatCardsGrid: React.FC<OwnerStatCardsGridProps> = ({ stats })
         </div>
         <div>
           <p className="text-xs font-semibold text-slate-500 mb-1">
-            Unique Visitors
+            Pengunjung Unik
           </p>
           <p className="text-2xl font-black text-slate-900 tracking-tight">
             {stats.uniqueVisitors || '3,842'}

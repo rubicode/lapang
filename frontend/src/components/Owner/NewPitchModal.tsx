@@ -68,10 +68,10 @@ export const NewPitchModal: React.FC<NewPitchModalProps> = ({
         <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
             <h3 className="text-base font-extrabold text-slate-900">
-              Tambah Pitch Baru
+              Tambah Lapangan Baru
             </h3>
             <p className="text-xs text-slate-500">
-              Daftarkan aset lapangan baru ke database Pitch Gallery.
+              Daftarkan aset lapangan baru ke sistem Lapang.
             </p>
           </div>
           <button
@@ -92,7 +92,7 @@ export const NewPitchModal: React.FC<NewPitchModalProps> = ({
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
-              Nama Lapangan (Pitch Name)
+              Nama Lapangan
             </label>
             <input
               type="text"
@@ -158,7 +158,7 @@ export const NewPitchModal: React.FC<NewPitchModalProps> = ({
                 Status Awal
               </label>
               <div className="h-[38px] flex items-center px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-[#1C5D23]">
-                ACTIVE
+                AKTIF
               </div>
             </div>
           </div>

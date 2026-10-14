@@ -32,11 +32,11 @@ export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
   onLogout
 }) => {
   const menuItems = [
-    { id: 'fields', label: 'Fields', icon: LayoutGrid },
-    { id: 'bookings', label: 'Bookings', icon: Calendar },
-    { id: 'schedule', label: 'Schedule', icon: Clock },
-    { id: 'revenue', label: 'Revenue', icon: DollarSign },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'fields', label: 'Lapangan', icon: LayoutGrid },
+    { id: 'bookings', label: 'Reservasi', icon: Calendar },
+    { id: 'schedule', label: 'Jadwal', icon: Clock },
+    { id: 'revenue', label: 'Pendapatan', icon: DollarSign },
+    { id: 'settings', label: 'Pengaturan', icon: Settings }
   ];
 
   return (
@@ -50,7 +50,7 @@ export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
             </h1>
           </div>
           <p className="text-xs text-slate-500 font-medium mt-0.5">
-            Management Dashboard
+            Dasbor Manajemen
           </p>
         </div>
 
@@ -96,13 +96,13 @@ export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
                 {ownerName || 'Marcus Silva'}
               </p>
               <p className="text-[10px] font-semibold text-slate-500 truncate">
-                {roleTitle || 'Premium Owner'}
+                {roleTitle === 'Premium Owner' ? 'Pemilik Premium' : roleTitle || 'Pemilik Lapangan'}
               </p>
             </div>
           </div>
           <button
             onClick={onLogout}
-            title="Keluar / Logout"
+            title="Keluar Akun"
             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition shrink-0 cursor-pointer"
           >
             <LogOut className="w-4 h-4" />

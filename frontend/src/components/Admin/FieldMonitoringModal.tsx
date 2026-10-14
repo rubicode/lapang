@@ -42,10 +42,10 @@ export const FieldMonitoringModal: React.FC<FieldMonitoringModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold">
-                  Active Field Live Monitoring Hub
+                  Pusat Pemantauan Lapangan Langsung
                 </h3>
                 <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  Telemetry Live Sync
+                  Sinkronisasi Telemetri Langsung
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -98,12 +98,12 @@ export const FieldMonitoringModal: React.FC<FieldMonitoringModalProps> = ({
               {isLive ? (
                 <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold bg-[#0e3813] text-white shadow-md">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  <span>LIVE BROADCAST • {currentField.occupancyFormatted || '60% Occupied'}</span>
+                  <span>SIARAN LANGSUNG • {currentField.occupancyFormatted || '60% Terisi'}</span>
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-900/90 text-amber-200 shadow-md">
                   <Wrench className="w-3.5 h-3.5" />
-                  <span>MAINTENANCE MODE • OFFLINE</span>
+                  <span>MODE PERAWATAN • NONAKTIF</span>
                 </span>
               )}
             </div>
@@ -156,7 +156,7 @@ export const FieldMonitoringModal: React.FC<FieldMonitoringModalProps> = ({
                 <span>Sisa Durasi Slot</span>
               </div>
               <p className="font-bold text-slate-800 text-sm">
-                {currentField.timeRemaining || (isLive ? '34 mins' : 'Est. 14:00 CET')}
+                {currentField.timeRemaining || (isLive ? '34 menit' : 'Est. 14:00 WIB')}
               </p>
             </div>
           </div>
@@ -185,7 +185,7 @@ export const FieldMonitoringModal: React.FC<FieldMonitoringModalProps> = ({
                   : 'bg-emerald-800 text-white hover:bg-emerald-900'
               }`}
             >
-              {isLive ? 'Set Maintenance' : 'Set Live'}
+              {isLive ? 'Ubah ke Perawatan' : 'Aktifkan Lapangan'}
             </button>
           </div>
         </div>
@@ -193,7 +193,7 @@ export const FieldMonitoringModal: React.FC<FieldMonitoringModalProps> = ({
         {/* Footer */}
         <div className="p-4 border-t border-gray-100 bg-slate-50 flex items-center justify-between">
           <span className="text-xs text-slate-400">
-            Node ID: PITCH-IOT-092 • Last Ping: 3s ago
+            Node ID: PITCH-IOT-092 • Ping Terakhir: 3 detik lalu
           </span>
           <button
             onClick={onClose}

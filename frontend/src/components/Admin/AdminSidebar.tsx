@@ -32,7 +32,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   onTabChange,
   adminUser = {
     name: 'Alex Thompson',
-    role: 'Global Admin',
+    role: 'Admin Global',
     avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&q=80'
   },
   onOpenSettings,
@@ -41,22 +41,22 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   const navItems = [
     {
       id: 'fields' as const,
-      label: 'Fields',
+      label: 'Lapangan',
       icon: LayoutGrid
     },
     {
       id: 'bookings' as const,
-      label: 'Bookings',
+      label: 'Reservasi',
       icon: Calendar
     },
     {
       id: 'users' as const,
-      label: 'Users',
+      label: 'Pengguna',
       icon: Users
     },
     {
       id: 'reports' as const,
-      label: 'Reports',
+      label: 'Laporan',
       icon: BarChart3
     }
   ];
@@ -70,9 +70,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-snug">
-                Management
+                Manajemen
               </h1>
-              <p className="text-xs text-slate-400 font-medium">Dashboard</p>
+              <p className="text-xs text-slate-400 font-medium">Dasbor</p>
             </div>
             <Link
               href="/"
@@ -80,7 +80,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               title="Kembali ke Peta Lapang.id"
             >
               <ArrowLeft className="w-3 h-3" />
-              <span>Public</span>
+              <span>Publik</span>
             </Link>
           </div>
         </div>
@@ -126,7 +126,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           }`}
         >
           <Settings className="w-4 h-4 text-slate-500" />
-          <span className="tracking-tight">Settings</span>
+          <span className="tracking-tight">Pengaturan</span>
         </button>
 
         {/* Admin User Card (Alex Thompson - Global Admin) */}
@@ -156,7 +156,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           {onLogout && (
             <button
               onClick={onLogout}
-              title="Keluar dari Admin Dashboard"
+              title="Keluar dari Dasbor Admin"
               className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition shrink-0 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />

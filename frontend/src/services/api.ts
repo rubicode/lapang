@@ -354,7 +354,7 @@ const DEFAULT_ADMIN_FALLBACK: AdminOverviewResponse = {
     totalOwnersGrowth: '+4%',
     activeBookings: 1120,
     activeBookingsFormatted: '1,120',
-    activeBookingsBadge: 'Active',
+    activeBookingsBadge: 'Aktif',
     monthlyRevenue: 42912,
     monthlyRevenueFormatted: '$42,912',
     currency: '$'

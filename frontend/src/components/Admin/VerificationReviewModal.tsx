@@ -64,10 +64,10 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-900">
-                Facility Verification Review
+                Tinjauan Verifikasi Fasilitas
               </h3>
               <p className="text-xs text-slate-500">
-                Application ID: #{applicant.id} • Submitted {applicant.submittedDate}
+                ID Pengajuan: #{applicant.id} • Diajukan {applicant.submittedDate}
               </p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-gray-100">
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Owner Details
+                Detail Pengelola
               </span>
               <p className="font-bold text-slate-900 flex items-center gap-2">
                 <User className="w-3.5 h-3.5 text-slate-400" />
@@ -105,7 +105,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
 
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Facility & Sport
+                Fasilitas &amp; Olahraga
               </span>
               <p className="font-bold text-slate-900 flex items-center gap-2">
                 <Building className="w-3.5 h-3.5 text-emerald-700" />
@@ -116,7 +116,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
                 {applicant.location || 'Lisbon, Portugal'}
               </p>
               <p className="text-xs font-semibold text-emerald-800 mt-1">
-                {applicant.sportType || 'Futsal & Padel'} • {applicant.courtsCount || 4} Courts
+                {applicant.sportType || 'Futsal & Padel'} • {applicant.courtsCount || 4} Lapangan
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
           {/* Verification Documents */}
           <div>
             <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-500 mb-2">
-              Uploaded Legal Documents & Permits
+              Dokumen Legal &amp; Izin Fasilitas
             </h4>
             <div className="space-y-2">
               {(applicant.documents && applicant.documents.length > 0
@@ -144,13 +144,13 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
                     </div>
                     <div>
                       <p className="text-xs font-bold text-slate-800">{doc.name}</p>
-                      <p className="text-[11px] text-slate-400">{doc.size} • Verified Anti-Malware</p>
+                      <p className="text-[11px] text-slate-400">{doc.size} • Terverifikasi Bebas Malware</p>
                     </div>
                   </div>
                   <button
                     onClick={() => alert(`Mengunduh dokumen validasi: ${doc.name}`)}
                     className="p-1.5 text-slate-500 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition cursor-pointer"
-                    title="Download document"
+                    title="Unduh dokumen"
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -163,7 +163,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
           {applicant.photos && applicant.photos.length > 0 && (
             <div>
               <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider text-slate-500 mb-2">
-                Facility Photos
+                Foto Fasilitas
               </h4>
               <div className="grid grid-cols-2 gap-3">
                 {applicant.photos.map((photo, i) => (
@@ -223,7 +223,7 @@ export const VerificationReviewModal: React.FC<VerificationReviewModalProps> = (
               className="px-4 py-2.5 rounded-xl text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 transition cursor-pointer flex items-center gap-1.5"
             >
               <AlertTriangle className="w-3.5 h-3.5" />
-              <span>{showIssueInput ? 'Kirim Catatan Isu' : 'Minta Perbaikan (Fix Issues)'}</span>
+              <span>{showIssueInput ? 'Kirim Catatan Isu' : 'Minta Perbaikan'}</span>
             </button>
 
             <button

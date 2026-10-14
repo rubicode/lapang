@@ -19,9 +19,9 @@ export default function LoginPage() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('error') === 'unauthorized') {
-        setErrorMessage('Akses ditolak. Anda harus login dengan akun Administrator untuk membuka Admin Dashboard.');
+        setErrorMessage('Akses ditolak. Anda harus login dengan akun Administrator untuk membuka Dasbor Admin.');
       } else if (params.get('error') === 'unauthorized_owner') {
-        setErrorMessage('Akses ditolak. Anda harus login dengan akun Pemilik Lapangan (Owner) untuk membuka Pitch Gallery Dashboard.');
+        setErrorMessage('Akses ditolak. Anda harus login dengan akun Pemilik Lapangan (Owner) untuk membuka Dasbor Pemilik.');
       }
     }
   }, []);
