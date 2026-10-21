@@ -5,9 +5,10 @@
 set -e
 
 echo "🚀 [1/5] Memperbarui paket sistem Ubuntu..."
-sudo apt-get update -y
-sudo apt-get upgrade -y
-sudo apt-get install -y ca-certificates curl gnupg lsb-release git ufw fail2ban
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get clean
+sudo apt-get update --fix-missing -y
+sudo apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release git ufw
 
 echo "🐳 [2/5] Memasang Docker Engine & Docker Compose Plugin resmi..."
 # Tambah GPG key resmi Docker
