@@ -75,18 +75,11 @@ jobs:
             echo "🚀 [EC2 Deploy] Masuk ke direktori aplikasi..."
             cd /home/${{ secrets.EC2_USER }}/lapang
 
-            echo "🔑 [EC2 Deploy] Login ke GHCR Container Registry..."
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+            echo "📥 [EC2 Deploy] Menarik perubahan kode & konfigurasi terbaru dari GitHub..."
+            git pull origin main
 
-            echo "📦 [EC2 Deploy] Memperbarui image container terbaru..."
-            BACKEND_IMAGE="ghcr.io/${{ env.REPO_LOWER }}-backend:latest" \
-            FRONTEND_IMAGE="ghcr.io/${{ env.REPO_LOWER }}-frontend:latest" \
-            docker compose -f docker-compose.prod.yml pull
-
-            echo "🔄 [EC2 Deploy] Menjalankan rolling update container..."
-            BACKEND_IMAGE="ghcr.io/${{ env.REPO_LOWER }}-backend:latest" \
-            FRONTEND_IMAGE="ghcr.io/${{ env.REPO_LOWER }}-frontend:latest" \
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            echo "🔄 [EC2 Deploy] Memperbarui dan menyalakan container production..."
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
 
             echo "🧹 [EC2 Deploy] Membersihkan image lama yang tidak terpakai..."
             docker image prune -af --filter "until=48h" || true
