@@ -15,7 +15,7 @@ interface FilterBarProps {
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
-  categories = [{ id: 'all', name: 'Semua Cabang', icon: '⚡' }],
+  categories = [{ id: 'all', name: 'Semua Lapang', icon: '⚡' }],
   cities = [{ id: 'all', name: '📍 Seluruh Indonesia (38 Provinsi)' }],
   activeSport,
   onSelectSport,
@@ -33,11 +33,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             <button
               key={cat.id}
               onClick={() => onSelectSport(cat.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                isActive
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${isActive
                   ? 'bg-brand-800 text-white shadow-sm'
                   : 'bg-gray-100 text-slate-700 hover:bg-brand-50 hover:text-brand-800'
-              }`}
+                }`}
             >
               <span>{cat.icon}</span>
               <span>{cat.name}</span>
