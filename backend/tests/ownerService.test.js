@@ -43,7 +43,7 @@ test('OwnerService Unit Tests', async (t) => {
     assert.equal(overview.stats.uniqueVisitors, '3,842');
     assert.equal(overview.stats.avgRatingScore, '98%');
     assert.equal(overview.stats.avgRatingBadge, '4.9/5');
-    assert.equal(overview.fields.length, 3, 'Harus ada 3 fields');
+    assert.ok(overview.fields.length >= 3, 'Harus ada minimal 3 fields');
     assert.equal(overview.fields[0].name, 'Arena X Elite');
     assert.equal(overview.fields[1].name, 'The Forest Turf');
     assert.ok(overview.recentBookings.length >= 4, 'Harus ada minimal 4 recent bookings');

@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: lapang_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lapang_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_local_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lapang_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lapang_net
+
+  minio:
+    image: minio/minio:latest
+    container_name: lapang_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_local_data:/data
+    networks:
+      - lapang_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lapang_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      NODE_ENV: development
+      PORT: 5001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: lapang_db
+      DB_USER: postgres
+      DB_PASS: postgres
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: "false"
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    ports:
+      - "5001:5001"
+    networks:
+      - lapang_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5001/api/v1
+    container_name: lapang_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:5001/api/v1
+    ports:
+      - "3000:3000"
+    networks:
+      - lapang_net
+
+networks:
+  lapang_net:
+    driver: bridge
+
+volumes:
+  postgres_local_data:
+  minio_local_data:

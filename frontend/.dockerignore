@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.gitignore
+.DS_Store
+e2e
+test-results
+*.log
+.env
+.env.local
