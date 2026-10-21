@@ -149,7 +149,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <div>
               <span className="text-xl font-extrabold tracking-tight">
-                Lapang<span className="text-emerald-400">.id</span>
+                Lapang<span className="text-emerald-400">.click</span>
               </span>
               <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
                 Nasional
@@ -268,22 +268,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setRole('user')}
-                        className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                          role === 'user'
+                        className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${role === 'user'
                             ? 'bg-brand-50 border-brand-800 text-brand-800 ring-1 ring-brand-800'
                             : 'bg-[#f0f2ee] border-transparent text-slate-600 hover:bg-slate-200'
-                        }`}
+                          }`}
                       >
                         <span>Pemain Olahraga</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setRole('owner')}
-                        className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                          role === 'owner'
+                        className={`p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${role === 'owner'
                             ? 'bg-amber-50 border-amber-600 text-amber-900 ring-1 ring-amber-600'
                             : 'bg-[#f0f2ee] border-transparent text-slate-600 hover:bg-slate-200'
-                        }`}
+                          }`}
                       >
                         <span>Pengelola Venue</span>
                       </button>
@@ -372,8 +370,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   {isLoading
                     ? 'Memproses...'
                     : mode === 'login'
-                    ? 'Masuk Sekarang'
-                    : 'Daftar Sekarang'}
+                      ? 'Masuk Sekarang'
+                      : 'Daftar Sekarang'}
                 </button>
               </div>
             </form>

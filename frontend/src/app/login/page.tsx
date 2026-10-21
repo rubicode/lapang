@@ -122,7 +122,7 @@ export default function LoginPage() {
             </div>
             <div>
               <span className="text-xl font-extrabold tracking-tight">
-                Lapang<span className="text-emerald-400">.id</span>
+                Lapang<span className="text-emerald-400">.click</span>
               </span>
               <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 uppercase tracking-wider">
                 Nasional

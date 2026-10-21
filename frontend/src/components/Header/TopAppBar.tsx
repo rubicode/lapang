@@ -100,7 +100,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                    Lapang<span className="text-brand-800">.id</span>
+                    Lapang<span className="text-brand-800">.click</span>
                   </span>
                   <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-100 text-brand-800 uppercase tracking-wider">
                     Nasional
