@@ -382,6 +382,44 @@ Setiap kali Anda selesai memodifikasi kode di laptop lokal:
 
 ---
 
+### E. Cara Mematikan atau Menonaktifkan CI/CD (Disable Workflows):
+Jika Anda ingin mematikan proses CI atau CD sementara waktu atau secara permanen, tersedia 4 metode yang dapat Anda gunakan:
+
+#### 1. Disable Workflow via Web GitHub (Paling Mudah & Tanpa Ubah Kode)
+- Masuk ke tab **Actions** di repositori: **[github.com/rubicode/lapang/actions](https://github.com/rubicode/lapang/actions)**.
+- Di sidebar sebelah kiri, klik nama workflow yang ingin dimatikan (`Lapang.id Continuous Integration (CI)` atau `Lapang.id Continuous Deployment (CD)`).
+- Di sebelah kanan atas (di samping judul workflow), klik tombol **titik tiga (`...`)**.
+- Pilih **`Disable workflow`**.
+- *Untuk mengaktifkan kembali, cukup buka halaman yang sama lalu klik **`Enable workflow`**.*
+
+#### 2. Matikan Total Seluruh Actions di Repository (Global Disable)
+- Buka tab **Settings** di repositori GitHub Anda.
+- Di menu samping kiri, klik **Actions** ➔ **General**.
+- Pada bagian **Actions permissions**, pilih opsi:
+  - 🔘 **Disable actions** *(No actions will run in this repository)*.
+- Klik tombol hijau **Save**.
+
+#### 3. Ubah Menjadi Manual Trigger (`workflow_dispatch`)
+Jika Anda tidak ingin CI/CD berjalan otomatis saat `git push`, tetapi tetap ingin bisa menjalankannya sesekali secara manual lewat tombol di GitHub:
+- Buka berkas `.github/workflows/ci.yml` atau `.github/workflows/cd.yml`.
+- Ubah bagian `on:` menjadi:
+  ```yaml
+  on:
+    workflow_dispatch:
+  ```
+  *(Hapus bagian `push:` dan `pull_request:`)*. Dengan cara ini, workflow hanya akan dieksekusi ketika Anda menekan tombol **"Run workflow"** di tab Actions.
+
+#### 4. Melewati (Skip) CI/CD Hanya untuk Commit Tertentu
+Jika Anda hanya ingin melewati eksekusi CI/CD pada commit tertentu (misalnya commit untuk pembaruan dokumentasi teks atau perbaikan typo tanpa perlu deploy ke server):
+- Cukup tambahkan tag `[skip ci]` atau `[ci skip]` pada pesan commit Anda:
+  ```bash
+  git commit -m "docs: perbarui panduan [skip ci]"
+  git push origin main
+  ```
+- GitHub Actions akan secara otomatis mengabaikan workflow untuk commit tersebut.
+
+---
+
 ## 7. Tahap 5: Konfigurasi Domain & Sertifikat SSL Gratis (HTTPS Certbot)
 
 Setelah Anda memiliki domain (misalnya `lapang.click`):
