@@ -103,15 +103,32 @@ export const VenueDetailDrawer: React.FC<VenueDetailDrawerProps> = ({
     }
 
     setIsSubmittingReview(true);
-    const success = await submitReviewApi(venue.slug || venue.id, {
-      user_name: 'Pemain Terverifikasi',
-      rating_overall: newReviewRating,
-      rating_floor: 5,
-      rating_lighting: 5,
-      rating_cleanliness: 5,
-      rating_hospitality: 5,
-      comment: newReviewComment.trim()
-    });
+    let reviewerName = 'Pemain Terverifikasi';
+    let token: string | null = null;
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('lapang_token');
+      const stored = localStorage.getItem('lapang_user');
+      if (stored) {
+        try {
+          const u = JSON.parse(stored);
+          if (u.name) reviewerName = u.name;
+        } catch {}
+      }
+    }
+
+    const success = await submitReviewApi(
+      venue.slug || venue.id,
+      {
+        user_name: reviewerName,
+        rating_overall: newReviewRating,
+        rating_floor: 5,
+        rating_lighting: 5,
+        rating_cleanliness: 5,
+        rating_hospitality: 5,
+        comment: newReviewComment.trim()
+      },
+      token
+    );
 
     setIsSubmittingReview(false);
     if (success) {

@@ -16,7 +16,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3002',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     launchOptions: {
@@ -30,8 +30,8 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: 'npx next dev -p 3002',
-    url: 'http://localhost:3002',
+    command: 'npx next dev -p 3000',
+    url: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 30 * 1000
   }

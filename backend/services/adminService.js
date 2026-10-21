@@ -97,22 +97,22 @@ export class AdminService {
 
     const pendingCount = verificationQueue.filter((a) => a.status === 'Pending Review').length;
 
-    // 4. Ambil lapangan aktif dari tabel 'courts' (JOIN 'venues' & 'sports_categories')
+    // 4. Ambil seluruh lapangan aktif dari tabel 'courts' (JOIN 'venues' & 'sports_categories')
     const courts = await Court.findAll({
       include: [
         { model: Venue, as: 'venue' },
         { model: SportsCategory, as: 'category' }
       ],
-      limit: 6
+      order: [['created_at', 'ASC']]
     });
 
-    const activeFields = courts.slice(0, 3).map((c) => {
+    const activeFields = courts.map((c) => {
       const isMaintenance = c.monitoring_status === 'MAINTENANCE' || !c.is_active;
 
       return {
         id: c.id,
         name: c.name,
-        location: c.venue ? `${c.venue.city_name}, ${c.venue.province_name}` : 'London, UK',
+        location: c.venue ? `${c.venue.city_name}, ${c.venue.province_name}` : 'Indonesia',
         status: isMaintenance ? 'MAINTENANCE' : 'LIVE',
         badgeType: isMaintenance ? 'maintenance' : 'live',
         occupancyRate: isMaintenance ? 0 : (c.occupancy_rate || 60),

@@ -175,6 +175,7 @@ export default function OwnerDashboardPage() {
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         ownerName={overviewData?.owner.name || currentUser?.name || 'Marcus Silva'}
+        venueName={overviewData?.venue?.name}
         roleTitle={overviewData?.owner.roleTitle || 'Premium Owner'}
         avatarUrl={overviewData?.owner.avatarUrl || currentUser?.avatar_url || undefined}
         onLogout={handleLogout}

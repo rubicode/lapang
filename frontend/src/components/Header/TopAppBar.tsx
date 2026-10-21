@@ -23,23 +23,38 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   currentUser: initialUser,
   onUserChange
 }) => {
-  const [user, setUser] = useState<AuthUser | null>(
-    initialUser || {
-      id: '10000000-0000-0000-0000-000000000001',
-      name: 'Rian Pratama',
-      email: 'rian@lapang.id',
-      role: 'user',
-      is_verified_player: true
-    }
-  );
-
+  const [user, setUser] = useState<AuthUser | null>(initialUser ?? null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   useEffect(() => {
     if (initialUser !== undefined) {
       setUser(initialUser);
+      return;
     }
+
+    const syncUserFromStorage = () => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('lapang_user');
+        if (stored) {
+          try {
+            setUser(JSON.parse(stored));
+          } catch {
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      }
+    };
+
+    syncUserFromStorage();
+    window.addEventListener('storage', syncUserFromStorage);
+    window.addEventListener('lapang_auth_changed', syncUserFromStorage);
+    return () => {
+      window.removeEventListener('storage', syncUserFromStorage);
+      window.removeEventListener('lapang_auth_changed', syncUserFromStorage);
+    };
   }, [initialUser]);
 
   const handleUserSuccess = (newUser: AuthUser) => {
@@ -49,6 +64,11 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
 
   const handleLogout = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('lapang_token');
+      localStorage.removeItem('lapang_user');
+      window.dispatchEvent(new Event('lapang_auth_changed'));
+    }
     setUser(null);
     if (onUserChange) onUserChange(null);
     alert('Anda telah logout dari akun.');
@@ -145,43 +165,58 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
             <div className="h-6 w-px bg-gray-200 mx-1"></div>
 
             {user ? (
-              <div
-                onClick={() => {
-                  setAuthMode('login');
-                  setIsAuthModalOpen(true);
-                }}
-                className="flex items-center gap-2 pl-1 cursor-pointer select-none group"
-                title="Klik untuk beralih akun atau melihat info RBAC"
-              >
-                <div className="w-9 h-9 rounded-full bg-brand-800 text-white font-bold flex items-center justify-center text-xs ring-2 ring-brand-300 group-hover:ring-brand-500 transition shadow-xs">
-                  {user.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-                </div>
-                <div className="hidden xl:block text-left text-xs leading-tight">
-                  <p className="font-bold text-slate-800 group-hover:text-brand-800 transition">{user.name}</p>
-                  <p className={`text-[10px] font-semibold ${roleInfo?.bg} px-1.5 py-0.2 rounded inline-block mt-0.5`}>
-                    {roleInfo?.text}
-                  </p>
+              <div className="flex items-center gap-2 pl-1 select-none">
+                <div
+                  onClick={() => {
+                    setAuthMode('login');
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="flex items-center gap-2 cursor-pointer group"
+                  title="Klik untuk beralih akun atau melihat info RBAC"
+                >
+                  <div className="w-9 h-9 rounded-full bg-brand-800 text-white font-bold flex items-center justify-center text-xs ring-2 ring-brand-300 group-hover:ring-brand-500 transition shadow-xs">
+                    {user.name.split(' ').map((n) => n[0]).slice(0, 2).join('')}
+                  </div>
+                  <div className="hidden xl:block text-left text-xs leading-tight">
+                    <p className="font-bold text-slate-800 group-hover:text-brand-800 transition">{user.name}</p>
+                    <p className={`text-[10px] font-semibold ${roleInfo?.bg} px-1.5 py-0.2 rounded inline-block mt-0.5`}>
+                      {roleInfo?.text}
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="hidden sm:block p-1 text-slate-400 hover:text-red-600 transition"
-                  title="Keluar"
+                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                  title="Keluar (Logout)"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => {
-                  setAuthMode('login');
-                  setIsAuthModalOpen(true);
-                }}
-                className="flex items-center gap-1.5 text-xs font-bold text-white bg-brand-800 hover:bg-brand-700 px-3.5 py-2 rounded-xl transition shadow-xs cursor-pointer"
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>Masuk / Daftar</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('login');
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-brand-800 hover:bg-brand-50 px-3 py-2 rounded-xl transition cursor-pointer"
+                >
+                  <KeyRound className="w-3.5 h-3.5 text-brand-700" />
+                  <span>Masuk</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('register');
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 text-xs font-bold text-white bg-brand-800 hover:bg-brand-700 px-3.5 py-2 rounded-xl transition shadow-xs cursor-pointer"
+                >
+                  <span>Daftar</span>
+                </button>
+              </div>
             )}
           </div>
         </div>

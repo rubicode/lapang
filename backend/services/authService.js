@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/index.js';
+import { User, Venue, Court } from '../models/index.js';
 import { ENV } from '../config/environment.js';
 import { USER_ROLES } from '../constants/index.js';
 
@@ -70,6 +70,58 @@ export class AuthService {
       role: userRole,
       is_verified_player: userRole === USER_ROLES.USER
     });
+
+    // Jika mendaftar sebagai Owner, buatkan Venue dan Lapangan khusus untuk akun tersebut
+    if (userRole === USER_ROLES.OWNER) {
+      const slugBase = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const uniqueSuffix = newUser.id.slice(0, 8);
+      const venueSlug = `${slugBase}-arena-${uniqueSuffix}`;
+
+      const newVenue = await Venue.create({
+        owner_id: newUser.id,
+        city_id: 1,
+        city_name: 'Jakarta Selatan',
+        province_name: 'DKI Jakarta',
+        name: `Arena Olahraga ${name.trim()}`,
+        slug: venueSlug,
+        address: 'Jl. Pemuda Olahraga No. 1, Jakarta Selatan',
+        latitude: -6.2615,
+        longitude: 106.8106,
+        phone_number: phone || '081234567890',
+        opening_hours: '08:00 - 23:00 WIB',
+        floor_type: 'Vinyl Approved',
+        court_type: 'Indoor',
+        base_price_hourly: 150000,
+        main_image_url: 'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
+        gallery_images: [
+          'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'
+        ],
+        description: `Fasilitas venue olahraga resmi dikelola oleh ${name.trim()}. Menyediakan fasilitas olahraga terawat dengan standar kompetisi.`,
+        rating_avg: 5.0,
+        review_count: 0,
+        is_verified: true,
+        verification_status: 'Approved',
+        sport_type: 'Futsal & Mini Soccer'
+      });
+
+      await Court.create({
+        venue_id: newVenue.id,
+        category_id: 'futsal',
+        name: 'Lapangan Utama (Pitch 1)',
+        floor_type: 'Vinyl Approved',
+        court_type: 'indoor',
+        match_format: '5-a-side',
+        surface_spec: 'Indoor Vinyl Pro',
+        price_hourly: 150000,
+        main_image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+        images: ['https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'],
+        is_active: true,
+        monitoring_status: 'LIVE',
+        occupancy_rate: 65,
+        active_players_count: 10
+      });
+    }
 
     const token = this.generateToken(newUser);
 

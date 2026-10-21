@@ -127,15 +127,14 @@ export async function runFullSeed() {
   ]);
   console.log('✅ Sports Categories seeded (5 kategori)');
 
-  // 3. Seed Provinces & Cities
+  // 3. Seed Provinces & Cities (Hanya Provinsi & Kota di Indonesia)
   await Province.bulkCreate([
     { id: 1, name: 'DKI Jakarta' },
     { id: 2, name: 'Jawa Barat' },
     { id: 3, name: 'Jawa Timur' },
     { id: 4, name: 'Bali' },
     { id: 5, name: 'Sumatera Utara' },
-    { id: 6, name: 'Sulawesi Selatan' },
-    { id: 7, name: 'International Venues' }
+    { id: 6, name: 'Sulawesi Selatan' }
   ]);
 
   await City.bulkCreate([
@@ -144,30 +143,26 @@ export async function runFullSeed() {
     { id: 3, province_id: 3, name: 'Surabaya', latitude: -7.2575, longitude: 112.7521 },
     { id: 4, province_id: 4, name: 'Denpasar', latitude: -8.6705, longitude: 115.2126 },
     { id: 5, province_id: 5, name: 'Medan', latitude: 3.5952, longitude: 98.6722 },
-    { id: 6, province_id: 6, name: 'Makassar', latitude: -5.1477, longitude: 119.4327 },
-    { id: 7, province_id: 7, name: 'Lisbon, Portugal', latitude: 38.7223, longitude: -9.1393 },
-    { id: 8, province_id: 7, name: 'Manchester, UK', latitude: 53.4808, longitude: -2.2426 },
-    { id: 9, province_id: 7, name: 'Kyoto, Japan', latitude: 35.0116, longitude: 135.7681 },
-    { id: 10, province_id: 7, name: 'Shanghai, China', latitude: 31.2304, longitude: 121.4737 }
+    { id: 6, province_id: 6, name: 'Makassar', latitude: -5.1477, longitude: 119.4327 }
   ]);
-  console.log('✅ Provinces & Cities seeded');
+  console.log('✅ Provinces & Cities seeded (Semua di Indonesia)');
 
   // 4. Seed Venues
   const venuesData = [
-    // --- Mockup Verification Queue Applications ---
+    // --- Mockup Verification Queue Applications (Berlokasi di Indonesia) ---
     {
       id: '11110000-0000-0000-0000-000000000001',
       owner_id: marcoUser.id,
-      city_id: 7,
+      city_id: 5,
       name: 'Arena Lisbon Pro',
       slug: 'arena-lisbon-pro',
-      city_name: 'Lisbon',
-      province_name: 'Portugal',
-      address: 'Rua das Flores 120, 1200-195 Lisboa',
-      latitude: 38.7223,
-      longitude: -9.1393,
-      phone_number: '+351 912 345 678',
-      opening_hours: '08:00 - 23:00 CET',
+      city_name: 'Medan',
+      province_name: 'Sumatera Utara',
+      address: 'Jl. Balai Kota No. 12, Kesawan, Medan Barat, Medan',
+      latitude: 3.5952,
+      longitude: 98.6722,
+      phone_number: '0812-3456-7890',
+      opening_hours: '08:00 - 23:00 WIB',
       floor_type: 'Futsal & Padel Interlock',
       court_type: 'Indoor Hall',
       base_price_hourly: 180000,
@@ -192,16 +187,16 @@ export async function runFullSeed() {
     {
       id: '11110000-0000-0000-0000-000000000002',
       owner_id: sarahUser.id,
-      city_id: 8,
+      city_id: 6,
       name: 'Jenkins Multisport',
       slug: 'jenkins-multisport',
-      city_name: 'Manchester',
-      province_name: 'UK',
-      address: '42 Oxford Road, Manchester M1 5QA',
-      latitude: 53.4808,
-      longitude: -2.2426,
-      phone_number: '+44 20 7946 0912',
-      opening_hours: '06:30 - 22:30 GMT',
+      city_name: 'Makassar',
+      province_name: 'Sulawesi Selatan',
+      address: 'Jl. Penghibur No. 42, Losari, Ujung Pandang, Makassar',
+      latitude: -5.1477,
+      longitude: 119.4327,
+      phone_number: '0813-4567-8901',
+      opening_hours: '06:30 - 22:30 WITA',
       floor_type: 'Badminton & Squash Hardwood',
       court_type: 'Indoor Hall',
       base_price_hourly: 150000,
@@ -209,7 +204,7 @@ export async function runFullSeed() {
       gallery_images: [
         'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'Pusat olahraga bulu tangkis dan squash modern di pusat kota Manchester.',
+      description: 'Pusat olahraga bulu tangkis dan squash modern di pusat kota Makassar.',
       rating_avg: 4.9,
       review_count: 32,
       is_verified: true,
@@ -224,16 +219,16 @@ export async function runFullSeed() {
     {
       id: '11110000-0000-0000-0000-000000000003',
       owner_id: robertUser.id,
-      city_id: 9,
+      city_id: 2,
       name: 'Kyoto Soccer Park',
       slug: 'kyoto-soccer-park',
-      city_name: 'Kyoto',
-      province_name: 'Japan',
-      address: '15 Karasuma-dori, Shimogyo-ku, Kyoto 600-8216',
-      latitude: 35.0116,
-      longitude: 135.7681,
-      phone_number: '+81 75 321 8844',
-      opening_hours: '07:00 - 23:00 JST',
+      city_name: 'Bandung',
+      province_name: 'Jawa Barat',
+      address: 'Jl. Dago Asri No. 15, Dago, Coblong, Bandung',
+      latitude: -6.8780,
+      longitude: 107.6180,
+      phone_number: '0814-5678-9012',
+      opening_hours: '07:00 - 23:00 WIB',
       floor_type: 'Synthetic Turf 5G',
       court_type: 'Outdoor Arena',
       base_price_hourly: 190000,
@@ -241,7 +236,7 @@ export async function runFullSeed() {
       gallery_images: [
         'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'Arena mini soccer outdoor di Kyoto dengan pemandangan pegunungan timur.',
+      description: 'Arena mini soccer outdoor di kawasan Dago Bandung dengan pemandangan pegunungan.',
       rating_avg: 4.8,
       review_count: 14,
       is_verified: false,
@@ -257,16 +252,16 @@ export async function runFullSeed() {
     {
       id: '11110000-0000-0000-0000-000000000004',
       owner_id: davidUser.id,
-      city_id: 10,
+      city_id: 3,
       name: 'Victory Stadium Shanghai',
       slug: 'victory-stadium-shanghai',
-      city_name: 'Shanghai',
-      province_name: 'China',
-      address: '888 Pudong South Rd, Lujiazui, Pudong, Shanghai',
-      latitude: 31.2304,
-      longitude: 121.4737,
-      phone_number: '+86 21 6234 5678',
-      opening_hours: '06:00 - 24:00 CST',
+      city_name: 'Surabaya',
+      province_name: 'Jawa Timur',
+      address: 'Jl. Mayjen Sungkono No. 50, Sawahan, Surabaya',
+      latitude: -7.2850,
+      longitude: 112.7200,
+      phone_number: '0815-6789-0123',
+      opening_hours: '06:00 - 24:00 WIB',
       floor_type: 'Hardwood FIBA & Acrylic Tennis',
       court_type: 'Multi-Level Complex',
       base_price_hourly: 250000,
@@ -274,7 +269,7 @@ export async function runFullSeed() {
       gallery_images: [
         'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'Kompleks olahraga multifungsi elit di kawasan finansial Shanghai.',
+      description: 'Kompleks olahraga multifungsi elit di kawasan Surabaya.',
       rating_avg: 4.95,
       review_count: 65,
       is_verified: true,

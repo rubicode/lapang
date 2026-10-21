@@ -16,9 +16,9 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
     // Tombol Dekat Saya
     await expect(page.locator('button:has-text("Dekat Saya")')).toBeVisible();
 
-    // User profile status
-    await expect(page.locator('text=Rian Pratama')).toBeVisible();
-    await expect(page.locator('text=Pemain Terverifikasi')).toBeVisible();
+    // Guest auth action buttons (tidak ada user dummy yang langsung login)
+    await expect(page.locator('button:has-text("Masuk")')).toBeVisible();
+    await expect(page.locator('button:has-text("Daftar")')).toBeVisible();
 
     // Quick search input
     const searchInput = page.locator('input[placeholder*="Cari lapangan"]');
@@ -114,10 +114,10 @@ test.describe('Platform Lapang.id - End-to-End (E2E) Test Suite', () => {
   });
 
   test('6. Verifikasi UI Modal Login & Register Sesuai Desain Mockup', async ({ page }) => {
-    // Klik profil atau tombol akun untuk membuka modal auth
-    const profileBtn = page.locator('text=Rian Pratama');
-    await expect(profileBtn).toBeVisible();
-    await profileBtn.click();
+    // Klik tombol Masuk akun untuk membuka modal auth
+    const masukBtn = page.locator('button:has-text("Masuk")');
+    await expect(masukBtn).toBeVisible();
+    await masukBtn.click();
 
     // Verifikasi elemen visual mockup sisi kiri (The Pitch is Waiting)
     await expect(page.locator('text=Lapangan Siap')).toBeVisible();

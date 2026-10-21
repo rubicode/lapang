@@ -43,6 +43,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  React.useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setErrorMessage('');
+    }
+  }, [initialMode, isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,6 +63,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (typeof window !== 'undefined') {
           localStorage.setItem('lapang_token', result.token);
           localStorage.setItem('lapang_user', JSON.stringify(result.user));
+          window.dispatchEvent(new Event('lapang_auth_changed'));
         }
         if (onSuccess) onSuccess(result.user);
         onClose();
@@ -71,6 +79,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (typeof window !== 'undefined') {
           localStorage.setItem('lapang_token', result.token);
           localStorage.setItem('lapang_user', JSON.stringify(result.user));
+          window.dispatchEvent(new Event('lapang_auth_changed'));
         }
         if (onSuccess) onSuccess(result.user);
         onClose();
@@ -92,6 +101,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     try {
       const result = await loginUser(presetEmail, 'Password123!');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lapang_token', result.token);
+        localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        window.dispatchEvent(new Event('lapang_auth_changed'));
+      }
       if (onSuccess) onSuccess(result.user);
       onClose();
       alert(`Login berhasil sebagai: ${result.user.name} (${result.user.role.toUpperCase()})`);

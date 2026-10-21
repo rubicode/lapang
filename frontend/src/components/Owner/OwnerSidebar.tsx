@@ -21,6 +21,7 @@ interface OwnerSidebarProps {
   roleTitle: string;
   avatarUrl?: string;
   onLogout: () => void;
+  venueName?: string;
 }
 
 export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
@@ -29,7 +30,8 @@ export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
   ownerName,
   roleTitle,
   avatarUrl,
-  onLogout
+  onLogout,
+  venueName
 }) => {
   const menuItems = [
     { id: 'fields', label: 'Lapangan', icon: LayoutGrid },
@@ -45,8 +47,8 @@ export const OwnerSidebar: React.FC<OwnerSidebarProps> = ({
       <div>
         <div className="p-6 pb-5">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black text-[#132A17] tracking-tight">
-              Pitch Gallery
+            <h1 className="text-xl font-black text-[#132A17] tracking-tight truncate" title={venueName || 'Pitch Gallery'}>
+              {venueName || 'Pitch Gallery'}
             </h1>
           </div>
           <p className="text-xs text-slate-500 font-medium mt-0.5">

@@ -37,8 +37,17 @@ export default function RegisterPage() {
         phone: phone || undefined,
         role
       });
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lapang_token', result.token);
+        localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        window.dispatchEvent(new Event('lapang_auth_changed'));
+      }
       alert(`Pendaftaran berhasil! Selamat datang, ${result.user.name}.`);
-      router.push('/');
+      if (result.user.role === 'owner') {
+        router.push('/owner');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       setErrorMessage(err.message || 'Pendaftaran gagal.');
     } finally {

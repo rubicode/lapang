@@ -31,10 +31,14 @@ export class VenueService {
     amenities = null
   }) {
     let venues = await Venue.findAll({
+      where: {
+        is_verified: true
+      },
       include: [
         {
           model: Court,
           as: 'courts',
+          required: true,
           include: [{ model: SportsCategory, as: 'category' }]
         },
         { model: VenueAmenity, as: 'amenities' }

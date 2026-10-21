@@ -149,7 +149,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                 {adminUser.name}
               </h4>
               <p className="text-xs text-slate-400 font-medium truncate">
-                {adminUser.role}
+                {adminUser.role === 'admin' || adminUser.role === 'Global Admin' ? 'Admin Global' : adminUser.role}
               </p>
             </div>
           </div>

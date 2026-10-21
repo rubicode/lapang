@@ -18,6 +18,55 @@ export class OwnerService {
       }
     }
 
+    if (!venue && user.role === USER_ROLES.OWNER) {
+      const slugBase = (user.name || 'owner').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const uniqueSuffix = user.id.slice(0, 8);
+      venue = await Venue.create({
+        owner_id: user.id,
+        city_id: 1,
+        city_name: 'Jakarta Selatan',
+        province_name: 'DKI Jakarta',
+        name: `Arena Olahraga ${user.name}`,
+        slug: `${slugBase}-arena-${uniqueSuffix}`,
+        address: 'Jl. Pemuda Olahraga No. 1, Jakarta Selatan',
+        latitude: -6.2615,
+        longitude: 106.8106,
+        phone_number: user.phone || '081234567890',
+        opening_hours: '08:00 - 23:00 WIB',
+        floor_type: 'Vinyl Approved',
+        court_type: 'Indoor',
+        base_price_hourly: 150000,
+        main_image_url: 'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
+        gallery_images: [
+          'https://images.unsplash.com/photo-1529900245534-47fbf8221565?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'
+        ],
+        description: `Fasilitas venue olahraga resmi dikelola oleh ${user.name}.`,
+        rating_avg: 5.0,
+        review_count: 0,
+        is_verified: true,
+        verification_status: 'Approved',
+        sport_type: 'Futsal & Mini Soccer'
+      });
+
+      await Court.create({
+        venue_id: venue.id,
+        category_id: 'futsal',
+        name: 'Lapangan Utama (Pitch 1)',
+        floor_type: 'Vinyl Approved',
+        court_type: 'indoor',
+        match_format: '5-a-side',
+        surface_spec: 'Indoor Vinyl Pro',
+        price_hourly: 150000,
+        main_image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+        images: ['https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80'],
+        is_active: true,
+        monitoring_status: 'LIVE',
+        occupancy_rate: 65,
+        active_players_count: 10
+      });
+    }
+
     if (!venue) {
       venue = await Venue.findOne();
     }
@@ -57,15 +106,20 @@ export class OwnerService {
       };
     }
 
+    // Ambil semua venue yang dimiliki oleh user ini
+    const ownerVenues = await Venue.findAll({ where: { owner_id: user.id } });
+    const venueIds = ownerVenues.length > 0 ? ownerVenues.map(v => v.id) : [venue.id];
+
     // Ambil daftar Courts (lapangan) untuk venue ini
     const courts = await Court.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
+      include: [{ model: Venue, as: 'venue' }],
       order: [['created_at', 'ASC']]
     });
 
     // Ambil semua Bookings untuk venue ini
     const allBookings = await Booking.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
       order: [['created_at', 'DESC']]
     });
 
@@ -96,8 +150,8 @@ export class OwnerService {
       return {
         id: c.id,
         name: c.name,
-        venueName: venue.name,
-        district: venue.district || 'Downtown Sports District',
+        venueName: c.venue?.name || venue.name,
+        district: c.venue?.district || venue.district || 'Downtown Sports District',
         status: c.is_active ? 'ACTIVE' : 'MAINTENANCE',
         isActive: c.is_active,
         matchFormat: c.match_format || '5-a-side',
@@ -174,10 +228,13 @@ export class OwnerService {
    * 2. Ambil data Bookings lengkap dengan filter & pencarian langsung dari PostgreSQL
    */
   static async getBookings(userId, { status = 'all', search = '', courtId = 'all', page = 1, limit = 50 } = {}) {
-    const { venue } = await this.getOwnerVenue(userId);
+    const { user, venue } = await this.getOwnerVenue(userId);
     if (!venue) throw new Error('Venue tidak ditemukan.');
 
-    const whereClause = { venue_id: venue.id };
+    const ownerVenues = await Venue.findAll({ where: { owner_id: user.id } });
+    const venueIds = ownerVenues.length > 0 ? ownerVenues.map(v => v.id) : [venue.id];
+
+    const whereClause = { venue_id: venueIds };
 
     if (status && status !== 'all') {
       whereClause.booking_status = status.toLowerCase();
@@ -208,7 +265,7 @@ export class OwnerService {
 
     // Ambil statistik ringkasan semua booking untuk venue ini
     const allBookings = await Booking.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
       attributes: ['id', 'booking_status', 'total_amount', 'payment_status']
     });
 
@@ -224,7 +281,7 @@ export class OwnerService {
     };
 
     const courts = await Court.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
       attributes: ['id', 'name']
     });
 
@@ -312,11 +369,14 @@ export class OwnerService {
    * 4. Ambil jadwal slot waktu harian (Schedule) untuk court tertentu
    */
   static async getSchedules(userId, { courtId, date } = {}) {
-    const { venue } = await this.getOwnerVenue(userId);
+    const { user, venue } = await this.getOwnerVenue(userId);
     if (!venue) throw new Error('Venue tidak ditemukan.');
 
+    const ownerVenues = await Venue.findAll({ where: { owner_id: user.id } });
+    const venueIds = ownerVenues.length > 0 ? ownerVenues.map(v => v.id) : [venue.id];
+
     const courts = await Court.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
       order: [['created_at', 'ASC']]
     });
 
@@ -472,15 +532,18 @@ export class OwnerService {
    * 6. Ambil data Revenue & Finansial lengkap langsung dari PostgreSQL
    */
   static async getRevenueData(userId, { period = 'month' } = {}) {
-    const { venue } = await this.getOwnerVenue(userId);
+    const { user, venue } = await this.getOwnerVenue(userId);
     if (!venue) throw new Error('Venue tidak ditemukan.');
 
+    const ownerVenues = await Venue.findAll({ where: { owner_id: user.id } });
+    const venueIds = ownerVenues.length > 0 ? ownerVenues.map(v => v.id) : [venue.id];
+
     const courts = await Court.findAll({
-      where: { venue_id: venue.id }
+      where: { venue_id: venueIds }
     });
 
     const allBookings = await Booking.findAll({
-      where: { venue_id: venue.id },
+      where: { venue_id: venueIds },
       order: [['created_at', 'DESC']]
     });
 

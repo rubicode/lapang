@@ -36,6 +36,7 @@ export default function LoginPage() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('lapang_token', result.token);
         localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        window.dispatchEvent(new Event('lapang_auth_changed'));
       }
       alert(`Selamat datang kembali, ${result.user.name}!`);
 
@@ -69,6 +70,7 @@ export default function LoginPage() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('lapang_token', result.token);
         localStorage.setItem('lapang_user', JSON.stringify(result.user));
+        window.dispatchEvent(new Event('lapang_auth_changed'));
       }
       alert(`Login berhasil sebagai: ${result.user.name} (${result.user.role.toUpperCase()})`);
 

@@ -8,7 +8,7 @@ import { VenueCatalogList } from '@/components/Catalog/VenueCatalogList';
 import { VenueDetailDrawer } from '@/components/Drawer/VenueDetailDrawer';
 import { SpecificationFilterModal } from '@/components/Modals/SpecificationFilterModal';
 import { CheckoutModal } from '@/components/Modals/CheckoutModal';
-import { Venue, SpecificationFilterState, SportFilter, CityOption } from '@/types';
+import { Venue, SpecificationFilterState, SportFilter, CityOption, AuthUser } from '@/types';
 import { fetchVenues, fetchCategories, fetchCities, createBookingApi } from '@/services/api';
 
 // Dynamic import LeafletMap with ssr: false to prevent Next.js SSR window errors
@@ -28,6 +28,7 @@ const LeafletMap = dynamic(
 );
 
 export default function HomePage() {
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSport, setActiveSport] = useState('all');
   const [activeCity, setActiveCity] = useState('all');
@@ -65,6 +66,32 @@ export default function HomePage() {
     dateTab: 'today',
     bookingCode: ''
   });
+
+  // Sinkronisasi Sesi Autentikasi Pengguna Aktif dari Database / localStorage
+  useEffect(() => {
+    const syncUser = () => {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('lapang_user');
+        if (stored) {
+          try {
+            setCurrentUser(JSON.parse(stored));
+          } catch {
+            setCurrentUser(null);
+          }
+        } else {
+          setCurrentUser(null);
+        }
+      }
+    };
+
+    syncUser();
+    window.addEventListener('storage', syncUser);
+    window.addEventListener('lapang_auth_changed', syncUser);
+    return () => {
+      window.removeEventListener('storage', syncUser);
+      window.removeEventListener('lapang_auth_changed', syncUser);
+    };
+  }, []);
 
   // 1. Ambil Kategori & Kota dari Database saat awal buka
   useEffect(() => {
@@ -160,11 +187,11 @@ export default function HomePage() {
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
     const chosenDate = dateTab === 'today' ? today : tomorrowStr;
 
-    // Kirim reservasi ke backend API (ACID Transaction)
+    // Kirim reservasi ke backend API (ACID Transaction) menggunakan user aktif atau guest
     const result = await createBookingApi({
       venueId: venue.id,
-      customerName: 'Rian Pratama',
-      customerPhone: '081234567890',
+      customerName: currentUser?.name || 'Pemain Tamu',
+      customerPhone: currentUser?.phone || '081234567890',
       date: chosenDate,
       timeSlot: selectedSlot,
       totalAmount: venue.priceHourly
@@ -187,6 +214,8 @@ export default function HomePage() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onGeolocation={handleGeolocation}
+        currentUser={currentUser}
+        onUserChange={setCurrentUser}
       />
 
       {/* 2. Filter & Category Chips Bar */}

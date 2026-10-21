@@ -201,6 +201,6 @@ test.describe('Autentikasi & Registrasi Pengguna E2E Test Suite', () => {
     const closeBtn = page.locator('a[title="Kembali ke Beranda"]').first();
     await expect(closeBtn).toBeVisible();
     await closeBtn.click();
-    await expect(page).toHaveURL('http://localhost:3002/');
+    await expect(page).toHaveURL(/.*:(3000|3002)?\/?$/);
   });
 });
