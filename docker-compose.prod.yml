@@ -23,7 +23,7 @@ services:
       - lapang_prod_net
 
   minio:
-    image: minio/minio:latest
+    image: cgr.dev/chainguard/minio:latest
     container_name: lapang_minio_prod
     restart: unless-stopped
     command: server /data --console-address ":9001"
@@ -41,7 +41,7 @@ services:
       - lapang_prod_net
 
   backend:
-    image: ${BACKEND_IMAGE:-ghcr.io/rubihenjaya/lapang-backend:latest}
+    image: ${BACKEND_IMAGE:-lapang-backend:prod}
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -79,7 +79,7 @@ services:
       - lapang_prod_net
 
   frontend:
-    image: ${FRONTEND_IMAGE:-ghcr.io/rubihenjaya/lapang-frontend:latest}
+    image: ${FRONTEND_IMAGE:-lapang-frontend:prod}
     build:
       context: ./frontend
       dockerfile: Dockerfile

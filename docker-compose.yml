@@ -20,7 +20,7 @@ services:
       - lapang_net
 
   minio:
-    image: minio/minio:latest
+    image: cgr.dev/chainguard/minio:latest
     container_name: lapang_minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
