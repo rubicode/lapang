@@ -38,7 +38,7 @@ export async function fetchCategories(): Promise<SportFilter[]> {
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
         return [
-          { id: 'all', name: 'Semua Cabang', icon: '⚡' },
+          { id: 'all', name: 'Semua Lapang', icon: '⚡' },
           ...json.data.map((c: any) => ({
             id: c.id,
             name: c.name,
@@ -50,7 +50,7 @@ export async function fetchCategories(): Promise<SportFilter[]> {
   } catch (err) {
     console.error('Gagal mengambil kategori:', err);
   }
-  return [{ id: 'all', name: 'Semua Cabang', icon: '⚡' }];
+  return [{ id: 'all', name: 'Semua Lapang', icon: '⚡' }];
 }
 
 /**
