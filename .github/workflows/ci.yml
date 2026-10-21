@@ -10,6 +10,20 @@ jobs:
   backend-test:
     name: Backend Lint & Unit Tests
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4-alpine
+        env:
+          POSTGRES_DB: lapang_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -25,9 +39,29 @@ jobs:
         run: npm ci
         working-directory: backend
 
+      - name: Run Database Migrations and Seed
+        run: |
+          npx sequelize-cli db:migrate
+          node seeders/seed.js
+        working-directory: backend
+        env:
+          NODE_ENV: development
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_NAME: lapang_db
+          DB_USER: postgres
+          DB_PASS: postgres
+
       - name: Run Backend Unit Tests
         run: npm test
         working-directory: backend
+        env:
+          NODE_ENV: development
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_NAME: lapang_db
+          DB_USER: postgres
+          DB_PASS: postgres
 
   frontend-build:
     name: Frontend Lint & Build Check

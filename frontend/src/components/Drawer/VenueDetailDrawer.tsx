@@ -480,7 +480,7 @@ export const VenueDetailDrawer: React.FC<VenueDetailDrawerProps> = ({
                       {r.ownerReply && (
                         <div className="mt-2.5 p-2.5 bg-brand-50/80 rounded-lg border-l-2 border-brand-800 text-[11px]">
                           <p className="font-bold text-brand-900 mb-0.5">Tanggapan Resmi Pengelola:</p>
-                          <p className="text-slate-700 italic">"{r.ownerReply}"</p>
+                          <p className="text-slate-700 italic">&quot;{r.ownerReply}&quot;</p>
                         </div>
                       )}
                     </div>
